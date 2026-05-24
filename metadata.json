@@ -1,0 +1,6 @@
+{
+  "name": "Dual Subtitle Finder & Streaming Hub",
+  "description": "Find and download Sinhala & English subtitles instantly, plus watch your favorite shows using pure premium HTML, CSS, and JS.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
