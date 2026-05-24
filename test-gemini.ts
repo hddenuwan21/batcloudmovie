@@ -25,7 +25,7 @@ async function run() {
       model: "gemini-2.5-flash",
       contents: "Hello",
     });
-    console.log("SUCCESS on gemini-2.0-flash! Response text:", response.text);
+    console.log("SUCCESS on gemini-2.5-flash! Response text:", response.text);
   } catch (err: any) {
     console.error("FAILED on gemini-2.5-flash:", err);
   }
@@ -36,9 +36,9 @@ async function run() {
       model: "gemini-3.5-flash",
       contents: "Hello",
     });
-    console.log("SUCCESS on gemini-2.0-flash! Response text:", response.text);
+    console.log("SUCCESS on gemini-3.5-flash! Response text:", response.text);
   } catch (err: any) {
-    console.error("FAILED on gemini-2.0-flash:", err);
+    console.error("FAILED on gemini-3.5-flash:", err);
   }
 }
 
