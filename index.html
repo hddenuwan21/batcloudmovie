@@ -174,25 +174,19 @@
 
     <!-- Sticky Navbar Navigation Header -->
     <nav id="navbar" class="fixed top-0 left-0 w-full z-40 transition-all duration-300 bg-gradient-to-b from-black/85 via-black/40 to-transparent py-3.5 px-4 md:px-12 flex items-center justify-between">
- <div class="flex items-center gap-6">
-    <div class="flex items-center gap-3.5 cursor-pointer group" onclick="homeClick()">
-        
-        <img src="1 (1).png" alt="BATCLOUD Graphic Logo" 
-             class="h-10 w-auto brightness-0 invert drop-shadow-[0_0_15px_rgba(229,9,20,0.4)] transition-all duration-300 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(229,9,20,0.6)]">
-        
-        <div class="flex flex-col items-start">
-            <span class="font-sans font-extrabold text-lg md:text-xl leading-none tracking-wide text-[#E50914] uppercase transition-colors duration-300 group-hover:text-white">
-                BATCLOUD
-            </span>
-            
-            <span class="text-[7px] tracking-[0.25em] font-black text-rose-500 uppercase leading-none mt-1.5 opacity-90">
-                PREMIUM MEDIA
-            </span>
-        </div>
-
-    </div>
-</div>
+         <div class="flex items-center gap-6">
+            <div class="flex items-center gap-2 sm:gap-3.5 cursor-pointer group" onclick="homeClick()">
+                <img src="1 (1).png" alt="BATCLOUD Graphic Logo" class="h-8 xs:h-10 w-auto brightness-0 invert drop-shadow-[0_0_15px_rgba(229,9,20,0.4)] transition-all duration-300 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(229,9,20,0.6)]">
+                <div class="flex flex-col items-start">
+                    <span class="font-sans font-extrabold text-[#E50914] uppercase transition-colors duration-300 group-hover:text-white text-sm xs:text-base sm:text-lg md:text-xl leading-none tracking-wide">
+                        BATCLOUD
+                    </span>
+                    <span class="text-[6px] sm:text-[7px] tracking-[0.25em] font-black text-rose-500 uppercase leading-none mt-1 sm:mt-1.5 opacity-90 hidden xs:inline-block">
+                        PREMIUM MEDIA
+                    </span>
+                </div>
             </div>
+         </div>
 
             <!-- Descriptive Nav Items -->
             <ul class="hidden xl:flex items-center gap-6 text-xs font-bold text-[#b3b3b3]">
@@ -290,17 +284,17 @@
         </div>
 
         <!-- Search input field, Dual Lang switcher, AI Dialog trigger -->
-        <div class="flex items-center gap-3.5">
+        <div class="flex items-center gap-1.5 sm:gap-3.5">
             <!-- Dynamic search mechanism -->
             <div class="relative z-50">
                 <div class="flex items-center bg-[#141414]/90 border border-[#2a2a2e]/80 rounded-full px-4 py-1.5 focus-within:border-netflixRed transition-all duration-300 shadow-inner">
                     <input 
                         type="text" 
                         id="searchInput" 
-                        placeholder="සෙවීම... (Ctrl+K)" 
-                        data-si-placeholder="සෙවීම... (Ctrl+K)"
-                        data-en-placeholder="Search movies/shows... (Ctrl+K)"
-                        class="bg-transparent text-white text-xs md:text-sm focus:outline-none w-32 sm:w-44 md:w-60"
+                        placeholder="සෙවීම..." 
+                        data-si-placeholder="සෙවීම..."
+                        data-en-placeholder="Search..."
+                        class="bg-transparent text-white text-xs md:text-sm focus:outline-none w-16 xs:w-28 sm:w-44 md:w-60"
                         oninput="triggerSearch()"
                         onkeydown="if(event.key==='Enter') { buildSearchGridPage(this.value.trim()); }"
                     >
@@ -311,7 +305,7 @@
             </div>
 
             <!-- Language Button -->
-            <button onclick="toggleLanguage()" class="flex items-center gap-1.5 px-3.5 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-xs font-black cursor-pointer text-white select-none transition-colors">
+            <button onclick="toggleLanguage()" class="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-xs font-black cursor-pointer text-white select-none transition-colors">
                 <i class="fas fa-globe"></i>
                 <span id="langLabel">සිංහල</span>
             </button>
@@ -481,7 +475,7 @@
                     </span>
                 </div>
 
-                <h1 id="heroTitle" class="font-display font-black text-3xl md:text-6xl tracking-tight leading-tight text-white drop-shadow-md">
+                <h1 id="heroTitle" class="font-display font-black text-2xl sm:text-3.5xl md:text-5xl lg:text-6xl tracking-tight leading-tight text-white drop-shadow-md">
                     NetStream Cinematic Center
                 </h1>
 
@@ -637,6 +631,57 @@
         // High Intelligence Chat Keys
         const OPENROUTER_API_KEY = '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';
         const GEMINI_API_KEY = 'AIzaSyBN1xR-TmPghY8Y4e0-AIEj_424D8HLIgg';
+
+        async function fetchAIChatResponse(promptText, useSchema = null) {
+            // First attempt: secure server proxy (/api/ai/chat)
+            try {
+                const requestPayload = { message: promptText };
+                if (useSchema) {
+                    requestPayload.prompt = promptText;
+                    requestPayload.responseSchema = useSchema;
+                }
+                const res = await fetch('/api/ai/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestPayload)
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    const reply = data.reply || 
+                                  data.choices?.[0]?.message?.content || 
+                                  data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (reply) return reply;
+                }
+            } catch (err) {
+                console.warn("Express backend proxy failed, trying direct browser connection fallback...", err);
+            }
+
+            // Fallback: Direct Gemini API query using client runtime variables
+            const requestBody = {
+                contents: [{
+                    parts: [{
+                        text: promptText
+                    }]
+                }]
+            };
+            if (useSchema) {
+                requestBody.generationConfig = {
+                    responseMimeType: "application/json",
+                    responseSchema: useSchema
+                };
+            }
+            const directRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestBody)
+            });
+            if (!directRes.ok) {
+                const errText = await directRes.text();
+                throw new Error(`Direct connection failed with HTTP ${directRes.status}: ${errText}`);
+            }
+            const resData = await directRes.json();
+            return resData.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        }
 
         // 5 Fully Configured Video Servers as ordered by prompt
         const streamServers = [
@@ -1399,59 +1444,39 @@ Return a perfect, valid JSON object structured as follows:
 }
 Only output the valid JSON response schema requested without any prefaces or markdown code block backticks.`;
 
-                const requestBody = {
-                    contents: [{
-                        parts: [{
-                            text: prompt
-                        }]
-                    }],
-                    generationConfig: {
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: "OBJECT",
-                            properties: {
-                                sinhala_details: {
-                                    type: "STRING"
-                                },
-                                english_details: {
-                                    type: "STRING"
-                                }
-                            },
-                            required: ["sinhala_details", "english_details"]
-                        }
-                    }
+                const schemaConfig = {
+                    type: "OBJECT",
+                    properties: {
+                        sinhala_details: { type: "STRING" },
+                        english_details: { type: "STRING" }
+                    },
+                    required: ["sinhala_details", "english_details"]
                 };
 
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyBN1xR-TmPghY8Y4e0-AIEj_424D8HLIgg`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(requestBody)
-                });
+                const rawText = await fetchAIChatResponse(prompt, schemaConfig);
                 
-                if (res.ok) {
-                    const resData = await res.json();
-                    const rawText = resData.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
-                    const data = JSON.parse(rawText);
-                    aiSummariesCache[cacheKey] = data;
-                    
-                    if (enBox) enBox.innerHTML = `<p class="text-white select-text leading-relaxed">${data.english_details.replace(/\n/g, '<br>')}</p>`;
-                    if (siBox) siBox.innerHTML = `<p class="text-[#ffeaa7] select-text leading-relaxed font-semibold">${data.sinhala_details.replace(/\n/g, '<br>')}</p>`;
-                    switchSynopsisTab('si'); // Switch to Sinhalese
-                } else {
-                    if (btn) btn.innerHTML = `<i class="fas fa-exclamation-triangle text-amber-500"></i> <span>Failed. Try Again</span>`;
-                    setTimeout(() => {
-                        if (btn) {
-                            btn.disabled = false;
-                            btn.innerHTML = `<i class="fas fa-sparkles animate-pulse"></i> <span>Smart AI Analysis</span>`;
-                        }
-                    }, 2000);
-                }
+                // Clean markdown boundaries if returned
+                let cleanedText = rawText.trim();
+                if (cleanedText.startsWith('```json')) cleanedText = cleanedText.substring(7);
+                else if (cleanedText.startsWith('```')) cleanedText = cleanedText.substring(3);
+                if (cleanedText.endsWith('```')) cleanedText = cleanedText.substring(0, cleanedText.length - 3);
+                cleanedText = cleanedText.trim();
+
+                const data = JSON.parse(cleanedText);
+                aiSummariesCache[cacheKey] = data;
+                
+                if (enBox) enBox.innerHTML = `<p class="text-white select-text leading-relaxed">${data.english_details.replace(/\n/g, '<br>')}</p>`;
+                if (siBox) siBox.innerHTML = `<p class="text-[#ffeaa7] select-text leading-relaxed font-semibold">${data.sinhala_details.replace(/\n/g, '<br>')}</p>`;
+                switchSynopsisTab('si'); // Switch to Sinhalese
             } catch (err) {
                 console.error("AI translation error:", err);
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = `<i class="fas fa-sparkles animate-pulse"></i> <span>Smart AI Analysis</span>`;
-                }
+                if (btn) btn.innerHTML = `<i class="fas fa-exclamation-triangle text-amber-500"></i> <span>Failed. Try Again</span>`;
+                setTimeout(() => {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = `<i class="fas fa-sparkles animate-pulse"></i> <span>Smart AI Analysis</span>`;
+                    }
+                }, 2000);
             } finally {
                 if (btn) {
                     btn.disabled = false;
@@ -1495,7 +1520,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
                     
                     container.innerHTML = '';
                     const sec = document.createElement('section');
-                    sec.className = 'max-w-7xl mx-auto px-6 md:px-12 py-10 animate-[fadeInUp_0.5s_ease]';
+                    sec.className = 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-[fadeInUp_0.5s_ease]';
                     
                     if (filtered.length === 0) {
                         sec.innerHTML = `
@@ -1551,7 +1576,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
                                 </h2>
                                 <span class="text-[10px] text-neutral-400 bg-white/5 border border-white/5 px-2.5 py-1 rounded-full font-mono font-bold">${filtered.length} matches discovered</span>
                             </div>
-                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-6">
+                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                                 ${cardsHtml}
                             </div>
                         `;
@@ -2141,7 +2166,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
             highlightNavPill();
 
             const sec = document.createElement('section');
-            sec.className = 'max-w-7xl mx-auto px-6 md:px-12 py-10 animate-[fadeInUp_0.7s_ease]';
+            sec.className = 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-[fadeInUp_0.7s_ease]';
             
             sec.innerHTML = `
                 <div class="flex items-center justify-between mb-8 border-b border-white/5 pb-4 select-none">
@@ -2150,7 +2175,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
                         <span data-si="විශේෂාංග නළු නිළි එකතුව" data-en="Elite Cast Collection">විශේෂාංග නළු නිළි එකතුව</span>
                     </h2>
                 </div>
-                <div id="castGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                <div id="castGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                     <!-- Skeletons loaded first -->
                 </div>
             `;
@@ -2271,7 +2296,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
             }
 
             const sec = document.createElement('section');
-            sec.className = 'max-w-7xl mx-auto px-6 md:px-12 py-6 animate-[fadeInUp_0.7s_ease]';
+            sec.className = 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 animate-[fadeInUp_0.7s_ease]';
             
             const headerRow = document.createElement('div');
             headerRow.className = 'flex items-center justify-between mb-6 border-b border-white/5 pb-4';
@@ -2285,7 +2310,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
 
             const gridDiv = document.createElement('div');
             gridDiv.id = 'catalogGrid';
-            gridDiv.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5';
+            gridDiv.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4';
             
             // Skeletons during loads
             for(let i=0; i<12; i++){
@@ -2463,7 +2488,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
 
             for (const config of rowConfigs) {
                 const rowSec = document.createElement('section');
-                rowSec.className = 'max-w-7xl mx-auto px-6 md:px-12 py-6 animate-[fadeInUp_0.7s_cubic-bezier(0.16,1,0.3,1)] relative select-none';
+                rowSec.className = 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 animate-[fadeInUp_0.7s_cubic-bezier(0.16,1,0.3,1)] relative select-none';
                 
                 // Section Title header Row
                 const headerRow = document.createElement('div');
@@ -2656,7 +2681,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
             highlightNavPill();
 
             const sec = document.createElement('section');
-            sec.className = 'max-w-7xl mx-auto px-6 md:px-12 py-10 animate-[fadeInUp_0.7s_ease]';
+            sec.className = 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-[fadeInUp_0.7s_ease]';
             
             sec.innerHTML = `
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 border-b border-white/5 pb-4 select-none">
@@ -2668,7 +2693,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
                         <i class="fas fa-trash-alt text-[10px]"></i> Clear Watch History
                     </button>
                 </div>
-                <div id="historyGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                <div id="historyGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                     <!-- History media items loaded from localStorage dynamic registry -->
                 </div>
             `;
@@ -2720,7 +2745,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
             highlightNavPill();
 
             const sec = document.createElement('section');
-            sec.className = 'max-w-7xl mx-auto px-6 md:px-12 py-10 animate-[fadeInUp_0.7s_ease]';
+            sec.className = 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-[fadeInUp_0.7s_ease]';
             
             sec.innerHTML = `
                 <div class="flex items-center justify-between mb-8 border-b border-white/5 pb-4 select-none">
@@ -2729,7 +2754,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
                         <span data-si="මගේ පුද්ගලික එකතුව" data-en="My Saved Watch List">මගේ පුද්ගලික එකතුව</span>
                     </h2>
                 </div>
-                <div id="myListGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                <div id="myListGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                     <!-- Loaded dynamically from localStorage -->
                 </div>
             `;
@@ -2836,7 +2861,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
 
             // Render beautiful Cinema Theatre inside rows container
             container.innerHTML = `
-                <div class="max-w-7xl mx-auto px-4 md:px-12 py-6 space-y-6 animate-[fadeInUp_0.5s_cubic-bezier(0.16,1,0.3,1)] select-none">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 animate-[fadeInUp_0.5s_cubic-bezier(0.16,1,0.3,1)] select-none">
                     
                     <!-- Header/Back Navigation Bar -->
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#2a2a2e]/60">
@@ -3918,30 +3943,9 @@ CRITICAL FORMATTING INSTRUCTIONS for listing movies or suggestions:
 
                 const fullPrompt = `${systemPrompt}\n\nClient Conversation Log:\n${formattedContents}\n\nSmart Assistant reply:`;
 
-                const requestBody = {
-                    contents: [{
-                        parts: [{
-                            text: fullPrompt
-                        }]
-                    }]
-                };
+                const reply = await fetchAIChatResponse(fullPrompt);
 
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyBN1xR-TmPghY8Y4e0-AIEj_424D8HLIgg`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(requestBody)
-                });
-
-                let reply = '';
-                if (response.ok) {
-                    const resData = await response.json();
-                    reply = resData.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                } else {
-                    const errData = await response.json().catch(() => ({}));
-                    console.error("Gemini chatbot error details:", response.status, errData);
-                }
-
-                if (!reply) throw new Error("Empty responses resolved from Gemini direct client endpoint.");
+                if (!reply) throw new Error("Empty responses resolved from Gemini proxy/client.");
 
                 // Render Response
                 document.getElementById('aiTypingIndicator').remove();

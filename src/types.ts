@@ -1,23 +1,19 @@
-export interface UserProfile {
-  name: string;
-  color: string;
-  icon: string;
-}
-
-export type MediaType = "movie" | "tv";
+/**
+ * Shared Type Definitions for Batcloud Xlive
+ */
 
 export interface MediaItem {
-  id: number | string;
+  id: number;
   title?: string;
   name?: string;
   poster_path: string | null;
-  backdrop_path: string | null;
+  backdrop_path?: string | null;
   vote_average?: number;
   release_date?: string;
   first_air_date?: string;
-  overview?: string;
-  media_type?: string;
+  media_type?: "movie" | "tv" | string;
   watchedAt?: string;
+  overview?: string;
 }
 
 export interface SubtitleCue {
@@ -28,16 +24,21 @@ export interface SubtitleCue {
 }
 
 export interface ChatMessage {
-  id: string;
   sender: "user" | "ai";
   text: string;
   timestamp: string;
 }
 
-export interface StreamServer {
+export interface Profile {
+  name: string;
+  color: string;
+  icon: string;
+}
+
+export interface ServerSource {
   name: string;
   badge: string;
   desc: string;
-  movie: (id: string) => string;
-  tv: (id: string, season: number, episode: number) => string;
+  movie: (tmdbId: string) => string;
+  tv: (tmdbId: string, s: number, e: number) => string;
 }
