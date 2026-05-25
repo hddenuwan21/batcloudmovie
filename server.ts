@@ -154,7 +154,7 @@ app.post("/api/chat", async (req, res) => {
     }
     
     const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.5-flash",
       contents: promptText,
       config: config
     });
@@ -168,6 +168,14 @@ app.post("/api/chat", async (req, res) => {
   // 2. OpenRouter Cascade
   for (const key of keysToTry) {
     try {
+      const orBody: any = {
+        model: "google/gemini-2.5-flash",
+        messages: [{ role: "user", content: promptText }]
+      };
+      if (responseSchema) {
+        orBody.response_format = { type: "json_object" };
+      }
+
       const orRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
         headers: {
@@ -176,10 +184,7 @@ app.post("/api/chat", async (req, res) => {
           "HTTP-Referer": "https://cinehub-3zqz.onrender.com",
           "X-Title": "CineHub Media"
         },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
-          messages: [{ role: "user", content: promptText }]
-        })
+        body: JSON.stringify(orBody)
       });
 
       if (orRes.ok) {
@@ -194,12 +199,20 @@ app.post("/api/chat", async (req, res) => {
 
   // 3. Direct Fetch Fallback
   try {
-    const directRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+    const directBody: any = {
+      contents: [{ parts: [{ text: promptText }] }]
+    };
+    if (responseSchema) {
+      directBody.generationConfig = {
+        responseMimeType: "application/json",
+        responseSchema: responseSchema
+      };
+    }
+
+    const directRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: promptText }] }]
-      })
+      body: JSON.stringify(directBody)
     });
 
     if (directRes.ok) {

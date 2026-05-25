@@ -758,7 +758,7 @@
 
                 // Default fallback options if no origin is saved yet
                 if (!activeOrigin) {
-                    activeOrigin = "https://ais-dev-37i5nbj2zxluswrbebs5zo-178073893340.asia-east1.run.app";
+                    activeOrigin = "https://cinehub-3zqz.onrender.com";
                 }
             } else {
                 activeOrigin = window.location.origin;
@@ -816,8 +816,7 @@
             // 2. Extra resilience: If we are on file:// and the primary connection failed, try standard hosted backups
             if (isLocalFile) {
                 const backups = [
-                    "https://ais-dev-37i5nbj2zxluswrbebs5zo-178073893340.asia-east1.run.app",
-                    "https://ais-pre-37i5nbj2zxluswrbebs5zo-178073893340.asia-east1.run.app",
+                    "http://localhost:3000",
                     "https://cinehub-3zqz.onrender.com"
                 ];
                 for (const backupOrigin of backups) {
