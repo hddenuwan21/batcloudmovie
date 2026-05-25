@@ -7,9 +7,6 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true,
-    allowedHosts: [
-      'batcloud-cinema.onrender.com',
-      'localhost'
-    ]
+    allowedHosts: true // 👈 මේක true කරපු ගමන් ඕනෑම ලින්ක් එකකින් සයිට් එක බ්ලොක් නොවී ලෝඩ් වෙනවා!
   }
 })
