@@ -224,7 +224,34 @@ app.post("/api/chat", async (req, res) => {
     console.error("Direct fallback failed:", err);
   }
 
-  return res.status(500).json({ error: "All backend models failed" });
+  // 4. Ultimate Resilient Human Fallback - guide user how to add keys to Render.com and explain why
+  console.warn("All backend models failed. Returning friendly environment key-guide to user.");
+  
+  if (responseSchema) {
+    return res.json({
+      reply: JSON.stringify({
+        sinhala_details: "<b>⚠️ AI සේවාව තාවකාලිකව අක්‍රීයයි:</b> කරුණාකර Render.com Dashboard හි ඔබේ Env Settings තුළ `GEMINI_API_KEY` නිවැරදිව සකසා ඇත්දැයි පරීක්ෂා කරන්න. මෙම චිත්‍රපටය ඉහළ වේගයකින් නැරඹීමට පහත 'Watch Now' ඔබන්න.",
+        english_details: "<b>⚠️ AI Service offline:</b> Live AI translation requires a valid `GEMINI_API_KEY` configured in your Render.com Environment settings. In the meantime, click 'Watch Now' to enjoy stream backups!"
+      })
+    });
+  }
+
+  return res.json({
+    reply: `👋 **ආයුබෝවන්! මම CineHub AI සහායකයා.** 
+
+මේ මොහොතේ අපට සජීවී AI මාදිලි සම්බන්ධ කර ගැනීමට නොහැකි වී ඇත (API keys exhausted/invalid). මෙයට ප්‍රධානම හේතුව ඔබේ **Render.com** සේවාදායකයේ (Hosting Server Environment) තවමත් **\`GEMINI_API_KEY\`** සාර්ථකව සකසා නොතිබීමයි.
+
+⚠️ **මෙය විසඳා ගැනීමට පියවර:**
+1. [Google AI Studio](https://aistudio.google.com/) වෙත ගොස් නොමිලේ ලැබෙන API Key එකක් සාදා ගන්න.
+2. ඔබේ **Render.com Dashboard (dashboard.render.com)** වෙත පිවිසෙන්න.
+3. ඔබේ CineHub Web Service එක තෝරා **Environment** tab එකට යන්න.
+4. **Add Environment Variable** ඔබා පහත පරිදි සකසන්න:
+   - **Key:** \`GEMINI_API_KEY\`
+   - **Value:** *(ඔබ ලබාගත් Google Gemini API Key එක)*
+5. වෙනස්කම් **Save** කර නැවත **Redeploy** කරන්න.
+
+*මෙම පියවර සම්පූර්ණ කළ පසු, සජීවී AI තාක්ෂණය, සාරාංශ පරිවර්තනයන් සහ නිර්දේශයන් සියල්ල කිසිදු බාධාවකින් තොරව ක්‍රියාත්මක වනු ඇත!*`
+  });
 });
 
 // 🚀 PRODUCTION ROUTING FIXED FOR RENDER
