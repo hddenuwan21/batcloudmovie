@@ -5,10 +5,10 @@ import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 
 const app = express();
-// 🚀 Render එකට ගැලපෙන ලෙස නිවැරදිව PORT එක සකස් කිරීම
+// 🚀 Hosting Environment එකට ගැලපෙන ලෙස PORT එක සකස් කිරීම
 const PORT = process.env.PORT || 3000;
 
-// 🔒 CORS සදහා ආරක්ෂිත ලියාපදිංචිය - file:// සහ ඕනෑම Origin එකක් සදහා ඉඩ සලසයි (CORS fix)
+// 🔒 CORS සදහා ආරක්ෂිත ලියාපදිංචිය - ඕනෑම තැනක (CORS Fix) වැඩ කිරීමට
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -30,7 +30,7 @@ function loadSiteData() {
     settings: {
       siteTitle: "CineHub - Premium Media | Watch Free Movies & TV Series Online",
       siteDescription: "Stream the latest movies, trending TV series, and exclusive cinematic content on CineHub. Premium free media platform with high quality, smooth streaming, and Sinhala subtitles.",
-      bannerText: "CineHub High Speed Server පෝට්ෆෝලියෝ සේවාදායකයන් ස්වයංක්‍රීයව ක්‍රියා කරයි. අනෙක් සියලුම සේවා තත්කාලීන පූරණයට සූදානම් කර ඇත. Playback Errors ඇත්නම් Server tabs මාරু කරන්න.",
+      bannerText: "CineHub High Speed Server පෝට්ෆෝලියෝ සේවාදායකයන් ස්වයංක්‍රීයව ක්‍රියා කරයි. අනෙක් සියලුම සේවා තත්කාලීන පූරණයට සූදානම් කර ඇත. Playback Errors ඇත්නම් Server tabs මාරු කරන්න.",
       activeBot: "gemini-2.0-flash",
       logoGlow: true,
       strictMode: false
@@ -68,17 +68,6 @@ setInterval(() => {
     }
   }
 }, 15000);
-
-// 🔑 API Key එක ආරක්ෂිතව Render Environment එකෙන් ගන්නවා
-const api_key = process.env.GEMINI_API_KEY || "AIzaSyBN1xR-TmPghY8Y4e0-AIEj_424D8HLIgg";
-const ai = new GoogleGenAI({
-  apiKey: api_key,
-  httpOptions: {
-    headers: {
-      "User-Agent": "aistudio-build",
-    },
-  },
-});
 
 // Admin Control Panel routes
 app.get("/admin", (req, res) => {
@@ -129,7 +118,7 @@ app.post("/api/admin/heartbeat", (req, res) => {
   res.json({ success: true, activeSessions: Math.max(1, activeSessions.size) });
 });
 
-// 🤖 💡 නිවැරදි කිරීම: Frontend එකට ගැලපෙන්න route එක "/api/chat" ලෙස වෙනස් කළා
+// 🤖 Unifed AI Chat Route (Handles both Bot & Smart Analysis)
 app.post("/api/chat", async (req, res) => {
   const { message, prompt, responseSchema } = req.body;
   const promptText = message || prompt;
@@ -143,60 +132,64 @@ app.post("/api/chat", async (req, res) => {
     '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'
   ];
   
-  // 🧹 Trimming API key to prevent copy-paste whitespace errors
   const GEMINI_API_KEY = (process.env.GEMINI_API_KEY || 'AIzaSyBN1xR-TmPghY8Y4e0-AIEj_424D8HLIgg').trim();
 
-  // Lazy initialize GoogleGenAI with fresh, trimmed API Key on each request
-  const aiClient = new GoogleGenAI({
-    apiKey: GEMINI_API_KEY,
-    httpOptions: {
-      headers: {
-        "User-Agent": "aistudio-build",
-      },
-    },
-  });
+  // 🚀 @google/genai SDK එක නිවැරදිව Initialize කිරීම
+  const aiClient = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
   // Models to process in sequence
   const modelsToTry = [
-    "gemini-flash-latest",
-    "gemini-2.5-flash",
     "gemini-2.0-flash",
-    "gemini-3.5-flash"
+    "gemini-2.5-flash",
+    "gemini-flash-latest"
   ];
 
-  // 1. Official SDK with Cascade Model Fallbacks
+  // 1️⃣ METHOD 1: Official SDK (Fixed generateContent Syntax)
   for (const modelName of modelsToTry) {
     try {
-      console.log(`Server: Attempting official Gemini SDK with model: ${modelName}...`);
-      const config: any = {};
-      if (responseSchema) {
-        config.responseMimeType = "application/json";
-        config.responseSchema = responseSchema;
-      }
+      console.log(`Server: Trying Official SDK with model: ${modelName}...`);
       
-      const response = await aiClient.models.generateContent({
+      const options: any = {
         model: modelName,
         contents: promptText,
-        config: config
-      });
+      };
 
+      // Schema එකක් ආවොත් පමණක් JSON Structured Output සක්‍රීය කරයි
+      if (responseSchema) {
+        options.config = {
+          responseMimeType: "application/json",
+          responseSchema: responseSchema
+        };
+      } else {
+        options.config = {
+          systemInstruction: "You are a friendly cinema AI assistant on CineHub streaming platform. Reply concisely in friendly colloquial Sinhala or English depending on user message. Recommend movies to watch, ratings, and cast details."
+        };
+      }
+      
+      const response = await aiClient.models.generateContent(options);
       const reply = response.text;
+      
       if (reply) {
-        console.log(`Server: Successfully fetched response with model ${modelName}!`);
+        console.log(`Server: Success with official SDK model: ${modelName}`);
         return res.json({ reply });
       }
     } catch (sdkErr: any) {
-      console.warn(`Server: Official SDK with model ${modelName} failed:`, sdkErr?.message || sdkErr);
+      console.warn(`Server: SDK model ${modelName} failed:`, sdkErr?.message || sdkErr);
     }
   }
 
-  // 2. OpenRouter Cascade
+  // 2️⃣ METHOD 2: OpenRouter Fallback Cascade
   for (const key of keysToTry) {
     try {
+      console.log("Server: Falling back to OpenRouter Api...");
       const orBody: any = {
-        model: "google/gemini-2.5-flash",
-        messages: [{ role: "user", content: promptText }]
+        model: "google/gemini-2.0-flash",
+        messages: [
+          { role: "system", content: "You are a friendly cinema AI assistant on CineHub streaming platform. Reply concisely in friendly colloquial Sinhala or English depending on user message." },
+          { role: "user", content: promptText }
+        ]
       };
+      
       if (responseSchema) {
         orBody.response_format = { type: "json_object" };
       }
@@ -206,7 +199,7 @@ app.post("/api/chat", async (req, res) => {
         headers: {
           "Authorization": `Bearer ${key}`,
           "Content-Type": "application/json",
-          "HTTP-Referer": "https://cinehub-3zqz.onrender.com",
+          "HTTP-Referer": "https://cinehub.live",
           "X-Title": "CineHub Media"
         },
         body: JSON.stringify(orBody)
@@ -215,27 +208,35 @@ app.post("/api/chat", async (req, res) => {
       if (orRes.ok) {
         const orData = await orRes.json();
         const reply = orData?.choices?.[0]?.message?.content;
-        if (reply) return res.json({ reply });
+        if (reply) {
+          console.log("Server: Success via OpenRouter.");
+          return res.json({ reply });
+        }
       }
     } catch (err) {
-      console.error("OpenRouter alternative key failed:", err);
+      console.error("OpenRouter key invocation failed:", err);
     }
   }
 
-  // 3. Direct Fetch Fallback
-  for (const fallbackModel of ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-3.5-flash"]) {
+  // 3️⃣ METHOD 3: Direct API Fetch Fallback (No SDK dependency)
+  for (const fallbackModel of ["gemini-2.0-flash", "gemini-2.5-flash"]) {
     try {
+      console.log(`Server: Trying direct HTTP API fetch for ${fallbackModel}...`);
       const directBody: any = {
         contents: [{ parts: [{ text: promptText }] }]
       };
+      
       if (responseSchema) {
         directBody.generationConfig = {
           responseMimeType: "application/json",
           responseSchema: responseSchema
         };
+      } else {
+        directBody.systemInstruction = {
+          parts: [{ text: "You are a friendly cinema AI assistant on CineHub streaming platform. Reply concisely in friendly colloquial Sinhala." }]
+        };
       }
 
-      console.log(`Server: Attempting direct HTTP fallback with model ${fallbackModel}...`);
       const directRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${fallbackModel}:generateContent?key=${GEMINI_API_KEY}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -245,47 +246,33 @@ app.post("/api/chat", async (req, res) => {
       if (directRes.ok) {
         const resData = await directRes.json();
         const reply = resData?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (reply) return res.json({ reply });
-      } else {
-        const errJson = await directRes.json().catch(() => ({}));
-        console.warn(`Direct fetch for ${fallbackModel} responded with error status:`, directRes.status, errJson);
+        if (reply) {
+          console.log(`Server: Direct fetch succeeded using ${fallbackModel}`);
+          return res.json({ reply });
+        }
       }
     } catch (err) {
       console.error(`Direct fallback for ${fallbackModel} failed:`, err);
     }
   }
 
-  // 4. Ultimate Resilient Human Fallback - guide user how to add keys to Render.com and explain why
-  console.warn("All backend models failed. Returning friendly environment key-guide to user.");
-  
+  // 4️⃣ METHOD 4: Ultimate Resilient Human Fallback
+  console.warn("All backend models failed completely.");
   if (responseSchema) {
     return res.json({
       reply: JSON.stringify({
-        sinhala_details: "<b>⚠️ AI සේවාව තාවකාලිකව අක්‍රීයයි:</b> කරුණාකර Render.com Dashboard හි ඔබේ Env Settings තුළ `GEMINI_API_KEY` නිවැරදිව සකසා ඇත්දැයි පරීක්ෂා කරන්න. මෙම චිත්‍රපටය ඉහළ වේගයකින් නැරඹීමට පහත 'Watch Now' ඔබන්න.",
-        english_details: "<b>⚠️ AI Service offline:</b> Live AI translation requires a valid `GEMINI_API_KEY` configured in your Render.com Environment settings. In the meantime, click 'Watch Now' to enjoy stream backups!"
+        sinhala_details: "<b>⚠️ AI සේවාව තාවකාලිකව අක්‍රීයයි:</b> කරුණාකර Hosting Dashboard එකෙහි `GEMINI_API_KEY` නිවැරදිදැයි බලන්න. වීඩියෝව නැරඹීමට පල්ලෙහා තියෙන Server ලින්ක් එකක් ක්ලික් කරන්න.",
+        english_details: "<b>⚠️ AI Service offline:</b> Please configure a valid `GEMINI_API_KEY` in your environment variables. Click the streaming links below to watch the content."
       })
     });
   }
 
   return res.json({
-    reply: `👋 **ආයුබෝවන්! මම CineHub AI සහායකයා.** 
-
-මේ මොහොතේ අපට සජීවී AI මාදිලි සම්බන්ධ කර ගැනීමට නොහැකි වී ඇත (API keys exhausted/invalid). මෙයට ප්‍රධානම හේතුව ඔබේ **Render.com** සේවාදායකයේ (Hosting Server Environment) තවමත් **\`GEMINI_API_KEY\`** සාර්ථකව සකසා නොතිබීමයි.
-
-⚠️ **මෙය විසඳා ගැනීමට පියවර:**
-1. [Google AI Studio](https://aistudio.google.com/) වෙත ගොස් නොමිලේ ලැබෙන API Key එකක් සාදා ගන්න.
-2. ඔබේ **Render.com Dashboard (dashboard.render.com)** වෙත පිවිසෙන්න.
-3. ඔබේ CineHub Web Service එක තෝරා **Environment** tab එකට යන්න.
-4. **Add Environment Variable** ඔබා පහත පරිදි සකසන්න:
-   - **Key:** \`GEMINI_API_KEY\`
-   - **Value:** *(ඔබ ලබාගත් Google Gemini API Key එක)*
-5. වෙනස්කම් **Save** කර නැවත **Redeploy** කරන්න.
-
-*මෙම පියවර සම්පූර්ණ කළ පසු, සජීවී AI තාක්ෂණය, සාරාංශ පරිවර්තනයන් සහ නිර්දේශයන් සියල්ල කිසිදු බාධාවකින් තොරව ක්‍රියාත්මක වනු ඇත!*`
+    reply: `👋 **ආයුබෝවන්! මම CineHub AI සහායකයා.** \n\nමේ මොහොතේ අපට සජීවී AI මාදිලි සම්බන්ධ කර ගැනීමට නොහැකි වී ඇත. කරුණාකර ඔබේ Environment Variables වල **\`GEMINI_API_KEY\`** නිවැරදිව සකසා ඇත්දැයි බලන්න!`
   });
 });
 
-// 🚀 PRODUCTION ROUTING FIXED FOR RENDER
+// 🚀 PRODUCTION ROUTING FIXED FOR ALL HOSTS
 async function startServer() {
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
@@ -299,7 +286,7 @@ async function startServer() {
     // Static assets සර්ව් කිරීම
     app.use(express.static(distPath));
     
-    // dist එකේ index.html නැතිනම් root එකේ index.html එක පෙන්වීම
+    // ඕනෑම URL එකකට 'dist/index.html' හෝ 'root/index.html' නිවැරදිව පෙන්වීම
     app.get("*", (req, res) => {
       const distIndex = path.join(distPath, "index.html");
       if (fs.existsSync(distIndex)) {
@@ -310,9 +297,8 @@ async function startServer() {
     });
   }
 
-  // 💡 Render එකට වඩාත්ම ආරක්ෂිත listen ක්‍රමය
   app.listen(PORT, () => {
-    console.log(`Server running safely on port ${PORT}`);
+    console.log(`🚀 CineHub Server running flawlessly on port ${PORT}`);
   });
 }
 
