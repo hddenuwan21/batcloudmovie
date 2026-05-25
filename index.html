@@ -3,12 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BoostMAX cinema</title>
-    
-    <link rel="icon" type="image/png" href="logo.png" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="theme-color" content="#0a0a0b">
+
+    <title>CineHub - Premium Media | Watch Free Movies & TV Series Online</title>
+    <meta name="description" content="Stream the latest movies, trending TV series, and exclusive cinematic content on CineHub. Premium free media platform with high quality, smooth streaming, and Sinhala subtitles.">
+    <meta name="keywords" content="CineHub, CineHub live, Watch free movies, Free TV Series online, Stream movies free, Sinhala sub movies, Cinema LK free, Watch series online, ෆ්‍රී ෆිල්ම්ස්, සිංහල සබ්, සිනමා ලංකා, ලංකා ෆ්ලික්ස්">
+    <meta name="author" content="CineHub Media">
+    <link rel="canonical" href="https://cinehub.live/"> <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <meta name="googlebot-video" content="index, follow">
+    <meta name="googlebot-image" content="index, follow">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "CineHub",
+      "url": "https://cinehub.live/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://cinehub.live/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      },
+      "description": "Watch high-quality movies and series for free on CineHub Premium Media."
+    }
+    </script>
+
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="CineHub - Premium Media | Watch Free Movies & TV Series Online">
+    <meta property="og:description" content="Stream the latest movies and trending TV series in high quality for free on CineHub. Enjoy a lag-free premium cinema experience.">
+    <meta property="og:url" content="https://cinehub.live/">
+    <meta property="og:site_name" content="CineHub">
+    <meta property="og:image" content="favicon.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CineHub - Premium Media | Free Streaming Platform">
+    <meta name="twitter:description" content="Watch high-quality movies and series for free on CineHub.">
+    <meta name="twitter:image" content="favicon.png">
+
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="favicon.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="favicon.png" />
+    <link rel="icon" type="image/png" sizes="144x144" href="favicon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon.png" />
+    <meta name="msapplication-TileImage" content="favicon.png">
+    <meta name="msapplication-TileColor" content="#0a0a0b">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -131,11 +178,10 @@
 </head>
 <body class="bg-netflixDark text-white font-sans overflow-x-hidden selection:bg-netflixRed selection:text-white">
 
-    <!-- Netflix Profile Choice Screen Gateway -->
     <div id="profileGate" class="hidden fixed inset-0 bg-[#0a0a0b] z-50 flex flex-col items-center justify-center select-none transition-all duration-500 overflow-y-auto py-10">
         <div class="text-center space-y-8 max-w-4xl px-6 animate-[fadeInUp_0.5s_ease-out] w-full">
             <h1 class="font-display font-black text-3xl md:text-5xl text-white tracking-tight drop-shadow-md">
-                Who's watching BoostMAX?
+                Who's watching CineHub?
             </h1>
             
             <!-- Dynamic Profiles Row Container -->
@@ -174,18 +220,22 @@
 
     <!-- Sticky Navbar Navigation Header -->
     <nav id="navbar" class="fixed top-0 left-0 w-full z-40 transition-all duration-300 bg-gradient-to-b from-black/85 via-black/40 to-transparent py-3.5 px-4 md:px-12 flex items-center justify-between">
-     <div class="flex items-center gap-6">
+<div class="flex items-center gap-6">
     <div class="flex items-center gap-3.5 cursor-pointer group" onclick="homeClick()">
         
-        <img src="1 (1).png" alt="BoostMAX Graphic Logo" 
-             class="h-10 w-auto brightness-0 invert drop-shadow-[0_0_15px_rgba(229,9,20,0.4)] transition-all duration-300 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(229,9,20,0.6)]">
+        <img src="logo3.png" alt="CineHub Graphic Logo" 
+             class="h-10 w-auto brightness-0 invert drop-shadow-[0_0_15px_rgba(229,9,20,0.5)] transition-all duration-300 group-hover:scale-105 group-hover:drop-shadow-[0_0_25px_rgba(229,9,20,0.8)]">
         
-        <div class="flex flex-col items-start">
-            <span class="font-sans font-extrabold text-lg md:text-xl leading-none tracking-wide text-[#E50914] uppercase transition-colors duration-300 group-hover:text-white">
-                BoostMAX
-            </span>
+        <div class="flex flex-col items-start select-none">
+            <div class="flex items-center font-sans font-black text-xl md:text-2xl tracking-tight leading-none">
+                <span class="text-white">Cine</span>
+                
+                <span class="ml-1 bg-[#E50914] text-black px-1.5 py-0.5 rounded font-black transition-colors duration-300 group-hover:bg-white">
+                    Hub
+                </span>
+            </div>
             
-            <span class="text-[7px] tracking-[0.25em] font-black text-rose-500 uppercase leading-none mt-1.5 opacity-90">
+            <span class="text-[8px] tracking-[0.2em] font-bold text-gray-400 uppercase leading-none mt-1.5 pl-0.5 transition-colors duration-300 group-hover:text-[#E50914]">
                 PREMIUM MEDIA
             </span>
         </div>
@@ -545,8 +595,8 @@
         </div>
         
         <div class="flex flex-col sm:flex-row items-center gap-x-4 gap-y-1 text-center sm:text-left text-xs text-[#52525b] md:order-1">
-            <p data-si="© 2026 BoostMAX. සියලුම හිමිකම් ඇවිරිණි." data-en="© 2026 BoostMAX. All rights reserved.">
-                © 2026 <span class="text-[#a1a1aa] font-semibold">BoostMAX</span>. All Rights Reserved.
+            <p data-si="© 2026 CineHub. සියලුම හිමිකම් ඇවිරිණි." data-en="© 2026 CineHub. All rights reserved.">
+                © 2026 <span class="text-[#a1a1aa] font-semibold">CineHub</span>. All Rights Reserved.
             </p>
             <span class="hidden sm:inline text-[#27272a]">|</span>
             <p class="text-[#71717a]">
@@ -599,6 +649,25 @@
             </button>
         </div>
 
+        <!-- AI Model Selection Bar -->
+        <div class="px-4 py-2.5 border-b border-white/5 bg-[#17171a] shrink-0 flex flex-col gap-1.5 selection:bg-rose-500">
+            <div class="flex items-center justify-between text-[9px] font-black uppercase tracking-widest text-[#8a8a93]">
+                <span class="flex items-center gap-1"><i class="fas fa-brain text-netflixRed animate-pulse"></i> Select AI Brain (මාදිලිය)</span>
+                <span id="currentModelBadge" class="text-netflixRed lowercase font-mono">CineHub</span>
+            </div>
+            <div class="flex gap-2 overflow-x-auto no-scrollbar py-0.5 whitespace-nowrap scroll-smooth">
+                <button onclick="selectModel('gemini-2.0-flash')" data-model-id="gemini-2.0-flash" class="ai-model-pill flex items-center gap-1 px-3 py-1 bg-netflixRed/15 text-white border border-netflixRed rounded-full text-[10px] font-bold cursor-pointer transition-all duration-200">
+                    <i class="fas fa-bolt text-yellow-500 text-[8px]"></i> BOT 1 (Direct)
+                </button>
+                <button onclick="selectModel('openai/gpt-oss-120b:free:primary')" data-model-id="openai/gpt-oss-120b:free:primary" class="ai-model-pill flex items-center gap-1 px-3 py-1 bg-white/5 text-neutral-400 border border-white/5 hover:border-white/10 hover:bg-white/10 rounded-full text-[10px] font-bold cursor-pointer transition-all duration-200">
+                    <i class="fas fa-globe text-[8px] text-blue-400"></i> BOT 2 (Primary)
+                </button>
+                <button onclick="selectModel('openai/gpt-oss-120b:free:backup')" data-model-id="openai/gpt-oss-120b:free:backup" class="ai-model-pill flex items-center gap-1 px-3 py-1 bg-white/5 text-neutral-400 border border-white/5 hover:border-white/10 hover:bg-white/10 rounded-full text-[10px] font-bold cursor-pointer transition-all duration-200">
+                    <i class="fas fa-globe text-[8px] text-indigo-400"></i> BOT 3 (Backup)
+                </button>
+            </div>
+        </div>
+
         <!-- Chat messages view area -->
         <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar bg-[#0a0a0b]/40">
             <!-- Initialized dynamically based on linguistic selection -->
@@ -615,9 +684,9 @@
                 class="flex-1 bg-[#1a1a1e] border border-[#2a2a2e]/80 text-white rounded-full px-4 py-2 text-xs focus:outline-none focus:border-netflixRed placeholder-[#808080] transition-colors"
                 onkeydown="if(event.key==='Enter')sendChatMessage()"
             >
-            <button onclick="sendChatMessage()" class="p-2.5 rounded-full bg-gradient-to-r from-[#667eea] to-[#764ba2] hover:opacity-90 flex items-center justify-center cursor-pointer text-white">
-                <i class="fas fa-paper-plane text-xs"></i>
-            </button>
+<button onclick="sendChatMessage()" class="p-2.5 rounded-full bg-[#E50914] hover:bg-[#b20710] active:scale-95 transition-all flex items-center justify-center cursor-pointer text-white shadow-lg shadow-[#E50914]/20">
+    <i class="fas fa-paper-plane text-xs"></i>
+</button>
         </div>
     </div>
 
@@ -633,15 +702,52 @@
         const IMAGE_BASE_W500 = 'https://image.tmdb.org/t/p/w500';
         const IMAGE_BASE_ORIGINAL = 'https://image.tmdb.org/t/p/original';
 
-        // High Intelligence Chat Keys
-        const OPENROUTER_API_KEY = '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';
-        const GEMINI_API_KEY = 'AIzaSyBN1xR-TmPghY8Y4e0-AIEj_424D8HLIgg';
+        // Environment Configuration Setup
+        const GEMINI_DIRECT_KEY = (typeof process !== 'undefined' && process.env && process.env.GEMINI_API_KEY)
+            ? process.env.GEMINI_API_KEY
+            : "AIzaSyBN1xR-TmPghY8Y4e0-AIEj_424D8HLIgg";
+
+        const OPENROUTER_KEY_1 = (typeof process !== 'undefined' && process.env && process.env.OPENROUTER_KEY_1)
+            ? process.env.OPENROUTER_KEY_1
+            : "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";
+
+        const OPENROUTER_KEY_2 = (typeof process !== 'undefined' && process.env && process.env.OPENROUTER_KEY_2)
+            ? process.env.OPENROUTER_KEY_2
+            : "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";
+
+        const OPENROUTER_API_KEY = OPENROUTER_KEY_1;
+        const OP_KEY = OPENROUTER_API_KEY;
+
+        let selectedAIModel = "gemini-2.0-flash";
+
+        function selectModel(modelId) {
+            selectedAIModel = modelId;
+            const badge = document.getElementById('currentModelBadge');
+            if (badge) {
+                let display = "gemini-2.0-flash";
+                if (modelId === "openai/gpt-oss-120b:free:primary") {
+                    display = "gpt-oss-120b (primary)";
+                } else if (modelId === "openai/gpt-oss-120b:free:backup") {
+                    display = "gpt-oss-120b (backup)";
+                }
+                badge.textContent = display;
+            }
+            const buttons = document.querySelectorAll('.ai-model-pill');
+            buttons.forEach(btn => {
+                const btnId = btn.getAttribute('data-model-id');
+                if (btnId === modelId) {
+                    btn.className = 'ai-model-pill flex items-center gap-1 px-3 py-1 bg-netflixRed/15 text-white border border-netflixRed rounded-full text-[10px] font-bold cursor-pointer transition-all duration-200';
+                } else {
+                    btn.className = 'ai-model-pill flex items-center gap-1 px-3 py-1 bg-white/5 text-neutral-400 border border-white/5 hover:border-white/10 hover:bg-white/10 rounded-full text-[10px] font-bold cursor-pointer transition-all duration-200';
+                }
+            });
+        }
 
         async function fetchAIChatResponse(promptText, useSchema = null) {
             const isLocalFile = window.location.protocol === 'file:';
-            
+
             // Helper for fetch with timeout
-            async function fetchWithTimeout(url, options = {}, timeoutMs = 6000) {
+            async function fetchWithTimeout(url, options = {}, timeoutMs = 12000) {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
                 try {
@@ -655,94 +761,124 @@
                 }
             }
 
-            // Fallback 1: Secure server proxy if available on-site backend (Skip if open as local file)
-            if (!isLocalFile) {
-                try {
-                    const requestPayload = { message: promptText };
-                    if (useSchema) {
-                        requestPayload.prompt = promptText;
-                        requestPayload.responseSchema = useSchema;
-                    }
-                    const res = await fetchWithTimeout('/api/ai/chat', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(requestPayload)
-                    }, 4000); // 4 seconds timeout for backend route request
-                    
-                    if (res.ok) {
-                        const data = await res.json();
-                        const reply = data.reply || 
-                                      data.choices?.[0]?.message?.content || 
-                                      data.candidates?.[0]?.content?.parts?.[0]?.text;
-                        if (reply) return reply;
-                    }
-                } catch (err) {
-                    console.warn("Express backend proxy failed or timed out. Falling back...", err);
-                }
+            // High Intelligence Prioritised Call Cascade Tree
+            const attempts = [];
+
+            if (selectedAIModel === "gemini-2.0-flash") {
+                attempts.push({ type: "gemini" });
+                attempts.push({ type: "openrouter", keyType: "primary" });
+                attempts.push({ type: "openrouter", keyType: "backup" });
+            } else if (selectedAIModel === "openai/gpt-oss-120b:free:primary") {
+                attempts.push({ type: "openrouter", keyType: "primary" });
+                attempts.push({ type: "gemini" });
+                attempts.push({ type: "openrouter", keyType: "backup" });
+            } else { // "openai/gpt-oss-120b:free:backup"
+                attempts.push({ type: "openrouter", keyType: "backup" });
+                attempts.push({ type: "gemini" });
+                attempts.push({ type: "openrouter", keyType: "primary" });
             }
 
-            // Fallback 2: Direct Gemini API query with Google key
-            try {
-                const requestBody = {
-                    contents: [{
-                        parts: [{
-                            text: promptText
-                        }]
-                    }]
-                };
-                if (useSchema) {
-                    requestBody.generationConfig = {
-                        responseMimeType: "application/json",
-                        responseSchema: useSchema
-                    };
-                }
-                const directRes = await fetchWithTimeout(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(requestBody)
-                }, 5500); // 5.5 seconds timeout for direct Gemini
-                
-                if (directRes.ok) {
-                    const resData = await directRes.json();
-                    const reply = resData.candidates?.[0]?.content?.parts?.[0]?.text;
-                    if (reply) return reply;
-                } else {
-                    console.warn(`Direct Gemini API returned HTTP status ${directRes.status}`);
-                }
-            } catch (err) {
-                console.warn("Direct Gemini API endpoint failed or timed out. Falling back to OpenRouter...", err);
-            }
+            // Execute sequence
+            for (const attempt of attempts) {
+                if (attempt.type === "gemini") {
+                    try {
+                        console.log("Attempting Direct Google Gemini 2.0 Flash API (Direct Priority/Fallback)...");
+                        const geminiPayload = {
+                            contents: [
+                                {
+                                    parts: [
+                                        {
+                                            text: promptText
+                                        }
+                                    ]
+                                }
+                            ],
+                            systemInstruction: {
+                                parts: [
+                                    {
+                                        text: "You are a friendly cinema AI assistant on CineHub streaming platform. Reply concisely in friendly colloquial Sinhala or English depending on user message. Recommend movies to watch, ratings, and cast details."
+                                    }
+                                ]
+                            }
+                        };
 
-            // Fallback 3: OpenRouter API query using OPENROUTER_API_KEY
-            if (typeof OPENROUTER_API_KEY !== 'undefined' && OPENROUTER_API_KEY) {
-                try {
-                    const orPayload = {
-                        model: "google/gemini-2.5-flash",
-                        messages: [
-                            { role: "user", content: promptText }
-                        ]
-                    };
-                    if (useSchema) {
-                        orPayload.response_format = { type: "json_object" };
+                        if (useSchema) {
+                            geminiPayload.generationConfig = {
+                                responseMimeType: "application/json",
+                                responseSchema: useSchema
+                            };
+                        }
+
+                        const geminiURL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + GEMINI_DIRECT_KEY;
+                        const geminiRes = await fetchWithTimeout(geminiURL, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(geminiPayload)
+                        }, 12000);
+
+                        if (geminiRes.ok) {
+                            const geminiData = await geminiRes.json();
+                            const reply = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text;
+                            if (reply) {
+                                console.log("Successfully fetched response from Direct Gemini 2.0 Flash API!");
+                                return reply;
+                            }
+                        } else {
+                            const errText = await geminiRes.text().catch(() => "");
+                            console.warn(`Direct Gemini API returned HTTP status ${geminiRes.status}: ${errText}`);
+                        }
+                    } catch (err) {
+                        console.warn("Direct Gemini API failed or timed out. Moving to next fallback...", err);
                     }
-                    const orRes = await fetchWithTimeout("https://openrouter.ai/api/v1/chat/completions", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${OPENROUTER_API_KEY}`
-                        },
-                        body: JSON.stringify(orPayload)
-                    }, 6000); // 6 seconds timeout for OpenRouter
-                    
-                    if (orRes.ok) {
-                        const orData = await orRes.json();
-                        const reply = orData.choices?.[0]?.message?.content;
-                        if (reply) return reply;
-                    } else {
-                        console.warn(`OpenRouter API returned HTTP status ${orRes.status}`);
+                } else if (attempt.type === "openrouter") {
+                    const activeKey = attempt.keyType === "primary" ? OPENROUTER_KEY_1 : OPENROUTER_KEY_2;
+                    try {
+                        console.log(`Attempting OpenRouter fetch with model: openai/gpt-oss-120b:free using Key ${attempt.keyType.toUpperCase()}...`);
+                        const orPayload = {
+                            model: "openai/gpt-oss-120b:free",
+                            messages: [
+                                { 
+                                    role: "system", 
+                                    content: "You are a friendly cinema AI assistant on CineHub streaming platform. Reply concisely in friendly colloquial Sinhala or English depending on user message. Recommend movies to watch, ratings, and cast details." 
+                                },
+                                { 
+                                    role: "user", 
+                                    content: promptText 
+                                }
+                            ]
+                        };
+
+                        if (useSchema) {
+                            orPayload.response_format = { type: "json_object" };
+                        }
+
+                        const orRes = await fetchWithTimeout("https://openrouter.ai/api/v1/chat/completions", {
+                            method: "POST",
+                            headers: {
+                                "Authorization": "Bearer " + activeKey,
+                                "Content-Type": "application/json",
+                                "HTTP-Referer": window.location.origin || "https://localhost",
+                                "X-Title": "CineHub Cinema"
+                            },
+                            body: JSON.stringify(orPayload)
+                        }, 12000);
+
+                        if (orRes.ok) {
+                            const orData = await orRes.json();
+                            const reply = orData?.choices?.[0]?.message?.content;
+                            if (reply) {
+                                console.log(`Successfully fetched response from OpenRouter using model openai/gpt-oss-120b:free (${attempt.keyType})`);
+                                return reply;
+                            }
+                        } else {
+                            const errText = await orRes.text().catch(() => "");
+                            console.warn(`OpenRouter API model openai/gpt-oss-120b:free returned HTTP status ${orRes.status}: ${errText}`);
+                        }
+                    } catch (err) {
+                        console.warn(`OpenRouter API model openai/gpt-oss-120b:free failed or timed out using Key ${attempt.keyType}:`, err);
                     }
-                } catch (err) {
-                    console.warn("OpenRouter API fallback failed or timed out. Falling back to Offline Smart Bot...", err);
                 }
             }
 
@@ -750,7 +886,7 @@
             if (useSchema) {
                 // If it asks for schema-based response (like movie analyses)
                 return JSON.stringify({
-                    sinhala_details: "මෙම මාධ්‍ය පිළිබඳ Smart AI විශ්ලේෂණය දැනට නොමිලේ/නොබැඳි ආකාරයෙන් ක්‍රියාත්මක වේ. BoostMAX Cinema මඟින් ඔබට උසස් තත්ත්වයේ ගුණාත්මක භාවයකින් යුත් සර්වර් සහ උපසිරැසි සමඟින් මේ වන විටත් නැරඹීමේ හැකියාව ලැබෙන බැවින්, පහත ඇති 'Watch Now' බොත්තම ඔබා චිත්‍රපටය රසවිඳින්න!",
+                    sinhala_details: "මෙම මාධ්‍ය පිළිබඳ Smart AI විශ්ලේෂණය දැනට නොමිලේ/නොබැඳි ආකාරයෙන් ක්‍රියාත්මක වේ. CineHub Cinema මඟින් ඔබට උසස් තත්ත්වයේ ගුණාත්මක භාවයකින් යුත් සර්වර් සහ උපසිරැසි සමඟින් මේ වන විටත් නැරඹීමේ හැකියාව ලැබෙන බැවින්, පහත ඇති 'Watch Now' බොත්තම ඔබා චිත්‍රපටය රසවිඳින්න!",
                     english_details: "Detailed Smart AI Synopsis analysis is currently loaded in Offline/Static fallback mode. Rest assured, full entertainment streaming, premium multiple backup servers, and history logging are fully functional on your local client, so click 'Watch Now' above or adjust servers to enjoy the show!"
                 });
             }
@@ -761,9 +897,9 @@
 
             if (lowerText.includes("hello") || lowerText.includes("hi") || lowerText.includes("hey") || lowerText.includes("oy") || lowerText.includes("kowda")) {
                 if (currentSelectedLang === 'si') {
-                    return `ආයුබෝවන්! 🍿 මම BoostMAX සිනමා ස්මාර්ට් සහායකයා. ඔයාට ඕනෑම චිත්‍රපටයක්, ටීවී කතා මාලාවක්, නළු නිළියන් හෝ නිර්දේශයන් පිළිබඳව මා සමඟ සිංහලෙන් හෝ ඉංග්‍රීසියෙන් කතා කරන්න පුළුවන්!`;
+                    return `ආයුබෝවන්! 🍿 මම CineHub සිනමා ස්මාර්ට් සහායකයා. ඔයාට ඕනෑම චිත්‍රපටයක්, ටීවී කතා මාලාවක්, නළු නිළියන් හෝ නිර්දේශයන් පිළිබඳව මා සමඟ සිංහලෙන් හෝ ඉංග්‍රීසියෙන් කතා කරන්න පුළුවන්!`;
                 }
-                return `Hello there! 🍿 I'm your BoostMAX Cinematic Companion. You can ask me anything about movies, TV series, elite cast, or personalized recommendations, and I will happily answer you!`;
+                return `Hello there! 🍿 I'm your CineHub Cinematic Companion. You can ask me anything about movies, TV series, elite cast, or personalized recommendations, and I will happily answer you!`;
             }
 
             if (lowerText.includes("movie") || lowerText.includes("recommend") || lowerText.includes("film") || lowerText.includes("best") || lowerText.includes("nawnna")) {
@@ -779,7 +915,7 @@
 
 ඉහත චිත්‍රපට සෙවීම් මඟින් සොයාගෙන, 'Watch Now' හෝ 'More Info' ඔබා දැන්ම නරඹන්න! 🎬`;
                 }
-                return `Here are some highly recommended masterpieces for you on BoostMAX:
+                return `Here are some highly recommended masterpieces for you on CineHub:
 
 | Movie / TV Show | Year | Rating | Vibe / Genre |
 | :--- | :---: | :---: | :--- |
@@ -793,7 +929,7 @@ Simply open the search bar at the top or click on any card to start streaming wi
 
             if (lowerText.includes("actor") || lowerText.includes("cast") || lowerText.includes("actress") || lowerText.includes("star")) {
                 if (currentSelectedLang === 'si') {
-                    return `BoostMAX සතුව විශිෂ්ටතම 'Cast Collection' නළු නිළි පිටුවක් ඇත. අපගේ ප්‍රධාන මෙනුවෙන් 'Cast Collection' තෝරා, එහි සිටින සුපිරි තරු (උදාහරණ: Robert Downey Jr., Cillian Murphy, Scarlett Johansson) රංගනයෙන් දායක වූ සියලුම චිත්‍රපට එකම තැනකින් පහසුවෙන්ම සොයා ගන්න!`;
+                    return `CineHub සතුව විශිෂ්ටතම 'Cast Collection' නළු නිළි පිටුවක් ඇත. අපගේ ප්‍රධාන මෙනුවෙන් 'Cast Collection' තෝරා, එහි සිටින සුපිරි තරු (උදාහරණ: Robert Downey Jr., Cillian Murphy, Scarlett Johansson) රංගනයෙන් දායක වූ සියලුම චිත්‍රපට එකම තැනකින් පහසුවෙන්ම සොයා ගන්න!`;
                 }
                 return `Our premium 'Elite Cast Collection' allows you to explore films starring your favorite stars like Cillian Murphy, Tom Hardy, or Robert Downey Jr. Simply head to the 'Cast Collection' tab in our navigation menu!`;
             }
@@ -825,29 +961,29 @@ In the meantime, you can search for and stream your favorite movies/shows or use
 
             // General informative cinema response fallback
             if (currentSelectedLang === 'si') {
-                return `ස්තූතියි! 🍿 ඔබ විමසූ කරුණ දැනට අපගේ නොබැඳි කේන්ද්‍රය හරහා විශ්ලේෂණය කෙරේ. BoostMAX සිනමා පීඨයේ සියලුම චිත්‍රපට, සජීවී සර්වර්, Watchlist සහ History සම්පූර්ණයෙන්ම ක්‍රියාකාරීව පවතී. ඔබට අවශ්‍ය ඕනෑම සිනමා පටයක් ඉහළ සෙවුම් තීරුවෙන් සෙවීමට හෝ අප හා සම්බන්ධ වීමට හැක!`;
+                return `ස්තූතියි! 🍿 ඔබ විමසූ කරුණ දැනට අපගේ නොබැඳි කේන්ද්‍රය හරහා විශ්ලේෂණය කෙරේ. CineHub සිනමා පීඨයේ සියලුම චිත්‍රපට, සජීවී සර්වර්, Watchlist සහ History සම්පූර්ණයෙන්ම ක්‍රියාකාරීව පවතී. ඔබට අවශ්‍ය ඕනෑම සිනමා පටයක් ඉහළ සෙවුම් තීරුවෙන් සෙවීමට හෝ අප හා සම්බන්ධ වීමට හැක!`;
             }
-            return `Thank you for chatting! 🍿 Even when running in standalone offline mode or on standard simple servers, BoostMAX features complete state retention, lightning-fast streaming server switches, full watchlist, and local history logging. You can search any film using the navigation search bar, add custom profiles, and enjoy unlimited streaming!`;
+            return `Thank you for chatting! 🍿 Even when running in standalone offline mode or on standard simple servers, CineHub features complete state retention, lightning-fast streaming server switches, full watchlist, and local history logging. You can search any film using the navigation search bar, add custom profiles, and enjoy unlimited streaming!`;
         }
 
         // 5 Fully Configured Video Servers as ordered by prompt
         const streamServers = [
             {
-                name: 'BoostMAX 1',
+                name: 'CineHub 1',
                 badge: '1080p Auto',
                 desc: 'Premium high-speed AutoEmbed cinema engine with native subtitles sync.',
                 movie: (id, tmdbId) => `https://autoembed.co/movie/tmdb/${tmdbId}`,
                 tv: (id, s, e, tmdbId) => `https://autoembed.co/tv/tmdb/${tmdbId}-${s}-${e}`
             },
                     {
-                name: 'BoostMAX 2',
+                name: 'CineHub 2',
                 badge: 'HD Mirror',
                 desc: 'Reliable secure alternative backup routing server.',
                 movie: (id, tmdbId) => `https://vidsrc.cc/v2/embed/movie/${tmdbId}`,
                 tv: (id, s, e, tmdbId) => `https://vidsrc.cc/v2/embed/tv/${tmdbId}/${s}/${e}`
             },
             {
-                name: 'BoostMAX 3',
+                name: 'CineHub 3',
                 badge: 'HD Premium',
                 desc: 'Highly compatible SmashyStream mirror, works flawlessly on all mobile devices.',
                 movie: (id, tmdbId) => `https://vidsrc.pm/embed/movie?tmdb=${tmdbId}`,
@@ -856,14 +992,14 @@ In the meantime, you can search for and stream your favorite movies/shows or use
         
 
             {
-                name: 'BoostMAX 4',
+                name: 'CineHub 4',
                 badge: 'Auto Res',
                 desc: 'High speed Vsrc streaming desktop server with multi-subtitles controller.',
                 movie: (id, tmdbId) => `https://vsrc.su/embed/movie?tmdb=${tmdbId}`,
                 tv: (id, s, e, tmdbId) => `https://vsrc.su/embed/tv?tmdb=${tmdbId}&season=${s}&episode=${e}`
             },
               {
-                name: 'BoostMAX 5',
+                name: 'CineHub 5',
                 badge: '4K Ultra',
                 desc: 'Instant MultiEmbed adaptive high bit-rate stream for ultimate speeds.',
                 movie: (id, tmdbId) => `https://multiembed.mov/?video_id=${tmdbId}&tmdb=1`,
@@ -906,7 +1042,7 @@ In the meantime, you can search for and stream your favorite movies/shows or use
         const textAssets = {
             chatWelcome: {
                 si: 'ආයුබෝවන්! 👋 මම ඔබේ චිත්‍රපට AI සහායකයා. ඔබට අද නැරඹීමට හොඳ නිර්දේශ අවශ්‍යද? චිත්‍රපට තොරතුරු, නළු නිළියන් සහ සිංහල සිනමා තොරතුරු ඕනෑම දෙයක් මාගෙන් විමසන්න!',
-                en: "Hello film lover! 👋 I'm your BoostMAX cinematic assistant. Ask me anything about movies, TV series, actors, or customized recommendations!"
+                en: "Hello film lover! 👋 I'm your CineHub cinematic assistant. Ask me anything about movies, TV series, actors, or customized recommendations!"
             },
             aiThinking: {
                 si: 'AI සහායක සිතමින් සිටී...',
@@ -1767,7 +1903,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
             container.innerHTML = `
                 <div class="flex flex-col items-center justify-center py-24 select-none animate-[fadeIn_0.4s_ease]">
                      <div class="w-12 h-12 rounded-full border-4 border-netflixRed border-t-transparent animate-spin"></div>
-                     <span class="mt-4 text-[10px] text-neutral-400 font-mono tracking-widest uppercase">Searching BoostMAX Databases...</span>
+                     <span class="mt-4 text-[10px] text-neutral-400 font-mono tracking-widest uppercase">Searching CineHub Databases...</span>
                 </div>
             `;
             
@@ -1817,7 +1953,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
                 mIcon.className = isLight ? "fas fa-sun text-amber-500 text-base mb-1 animate-[spin_10s_linear_infinite]" : "fas fa-moon text-indigo-400 text-base mb-1";
                 mLabel.textContent = isLight ? "Light Mode" : "Dark Cinema";
             }
-            localStorage.setItem('BoostMAX_theme', currentTheme);
+            localStorage.setItem('CineHub_theme', currentTheme);
         }
 
         function loadCustomProfilesRegistry() {
@@ -1920,7 +2056,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
         // Initialize App on DOM load
         document.addEventListener('DOMContentLoaded', () => {
             // Theme setup
-            const storedTheme = localStorage.getItem('BoostMAX_theme');
+            const storedTheme = localStorage.getItem('CineHub_theme');
             if (storedTheme) {
                 currentTheme = storedTheme;
             }
@@ -3163,7 +3299,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
                             </button>
                         </div>
                         <div class="md:text-right min-w-0">
-                            <span class="text-[9px] uppercase font-bold tracking-widest text-[#a78bfa] block leading-none">NOW PLAYING ON BoostMAX</span>
+                            <span class="text-[9px] uppercase font-bold tracking-widest text-[#a78bfa] block leading-none">NOW PLAYING ON CineHub</span>
                             <h3 id="playerTitle" class="text-sm md:text-base font-extrabold text-white truncate leading-tight mt-1">${title}... (Loading / පිවිසෙමින්)</h3>
                         </div>
                     </div>
@@ -3622,7 +3758,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
                     }
                 }
 
-                // Render cinematic BoostMAX styled split layout
+                // Render cinematic CineHub styled split layout
                 detailsDiv.innerHTML = `
                     <div class="space-y-6 text-left selection:bg-netflixRed select-text">
                         
@@ -3690,7 +3826,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
                                     </div>
                                 </div>
 
-                                <!-- Metadata info grid matching BoostMAX style -->
+                                <!-- Metadata info grid matching CineHub style -->
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[#141417] p-5 rounded-xl border border-[#2a2a2e]/50 text-xs">
                                     <div class="flex gap-2.5 py-2 border-b border-white/5 sm:border-r sm:border-b-0 pr-2">
                                         <span class="text-[#808080] font-bold w-24">Director:</span>
@@ -3731,7 +3867,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
 
                                 <!-- Playback/Download warning or info alert banner -->
                                 <div class="p-4 rounded-xl border border-[#7c3aed]/25 bg-[#7c3aed]/5 text-[11px] leading-relaxed text-[#a78bfa] font-semibold select-none">
-                                    💡 <span class="font-bold underline text-[#c084fc]">BoostMAX High Speed Server</span> පෝට්ෆෝලියෝ සේවාදායකයන් ස්වයංක්‍රීයව ක්‍රියා කරයි. අනෙක් සියලුම සේවා තත්කාලීන පූරණයට සූදානම් කර ඇත. Playback Errors ඇත්නම් Server tabs මාරු කරන්න.
+                                    💡 <span class="font-bold underline text-[#c084fc]">CineHub High Speed Server</span> පෝට්ෆෝලියෝ සේවාදායකයන් ස්වයංක්‍රීයව ක්‍රියා කරයි. අනෙක් සියලුම සේවා තත්කාලීන පූරණයට සූදානම් කර ඇත. Playback Errors ඇත්නම් Server tabs මාරු කරන්න.
                                 </div>
 
 
@@ -4219,7 +4355,7 @@ Only output the valid JSON response schema requested without any prefaces or mar
             feed.scrollTop = feed.scrollHeight;
 
             // Chat engine mapping system prompt
-            const systemPrompt = `You are BoostMAX's smart AI Movie and TV assistant. 
+            const systemPrompt = `You are CineHub's smart AI Movie and TV assistant. 
 You must speak in Sinhalese (සිංහල), English, or Singlish (Romanized Sinhalese) depending on what the user uses to converse with you.
 Offer friendly, highly detailed recommendations, summaries, cast actors, and statistics. 
 
@@ -4229,6 +4365,7 @@ CRITICAL FORMATTING INSTRUCTIONS for listing movies or suggestions:
 - Keep paragraphs descriptive but separated by double linebreaks for high spacing.
 - NEVER bunch recommendations together on single lines; present them 1 by 1 on clean separate lines.`;
 
+            let reply = null;
             try {
                 const formattedContents = chatHistory.map(m => {
                     return `${m.sender === "user" ? "Client" : "Assistant"}: ${m.text || ""}`;
@@ -4236,13 +4373,20 @@ CRITICAL FORMATTING INSTRUCTIONS for listing movies or suggestions:
 
                 const fullPrompt = `${systemPrompt}\n\nClient Conversation Log:\n${formattedContents}\n\nSmart Assistant reply:`;
 
-                const reply = await fetchAIChatResponse(fullPrompt);
+                reply = await fetchAIChatResponse(fullPrompt);
 
                 if (!reply) throw new Error("Empty responses resolved from Gemini proxy/client.");
 
+            } catch (err) {
+                console.error("AI error response block:", err);
+            } finally {
+                // Instantly remove Typing indicator
+                const typingInd = document.getElementById('aiTypingIndicator');
+                if (typingInd) typingInd.remove();
+            }
+
+            if (reply) {
                 // Render Response
-                document.getElementById('aiTypingIndicator').remove();
-                
                 const aiBox = document.createElement('div');
                 aiBox.className = 'flex flex-col items-start w-full pr-4';
                 aiBox.innerHTML = `
@@ -4256,10 +4400,7 @@ CRITICAL FORMATTING INSTRUCTIONS for listing movies or suggestions:
 
                 chatHistory.push({ sender: 'ai', text: reply });
 
-            } catch (err) {
-                console.error("AI error response block:", err);
-                document.getElementById('aiTypingIndicator').remove();
-                
+            } else {
                 const errBox = document.createElement('div');
                 errBox.className = 'flex flex-col items-start max-w-[82%] mr-auto';
                 errBox.innerHTML = `
