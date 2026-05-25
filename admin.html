@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineHub - Core Control & System Admin Dashboard</title>
+    
+    <!-- Design Packages -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet font-sans">
+    
+    <!-- Script Packages -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        netflixRed: '#e50914',
+                        netflixRedHover: '#b20710',
+                        netflixDark: '#0a0a0b',
+                        netflixCard: '#141417',
+                        netflixBorder: '#232329',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #232329;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #e50914;
+        }
+        .glow-red {
+            box-shadow: 0 0 25px rgba(229, 9, 20, 0.25);
+        }
+    </style>
+</head>
+<body class="bg-[#0a0a0b] text-neutral-100 font-sans min-h-screen overflow-x-hidden selection:bg-netflixRed selection:text-white">
+
+    <!-- Sticky Admin Header -->
+    <header class="sticky top-0 z-40 bg-netflixDark/90 backdrop-blur-md border-b border-netflixBorder px-4 md:px-12 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <span class="flex items-center font-sans font-black text-xl tracking-tight leading-none">
+                <span class="text-white">Cine</span>
+                <span class="ml-1 bg-[#E50914] text-black px-1.5 py-0.5 rounded font-black">Hub</span>
+            </span>
+            <span class="h-4 w-[1px] bg-netflixBorder"></span>
+            <span class="text-xs font-mono uppercase tracking-widest text-netflixRed font-extrabold flex items-center gap-1">
+                <i class="fas fa-shield-alt"></i> Control Center
+            </span>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <a href="/" class="px-4 py-1.5 rounded-full border border-netflixBorder bg-[#141417] hover:bg-neutral-800 text-xs font-bold transition-all flex items-center gap-1.5">
+                <i class="fas fa-external-link-alt text-[10px]"></i> View Site
+            </a>
+            <button onclick="loadStatsAndSettings()" class="p-2 rounded-full bg-netflixBorder hover:bg-[#1e1e24] transition-all cursor-pointer text-neutral-300" title="Refresh Dashboard Stats">
+                <i class="fas fa-sync-alt text-xs animate-[spin_15s_linear_infinite]" id="refreshBtnIcon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 md:px-8 py-8 space-y-8">
+        
+        <!-- Welcome banner -->
+        <div class="bg-gradient-to-r from-neutral-900 to-netflixDark border border-netflixBorder rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 glow-red">
+            <div class="space-y-2">
+                <span class="text-xs font-extrabold tracking-wider text-netflixRed uppercase font-mono">System Status: Online</span>
+                <h1 class="text-2xl md:text-3xl font-display font-black tracking-tight text-white">CineHub Dashboard Controller</h1>
+                <p class="text-xs text-neutral-400 max-w-xl">
+                    Manage direct model configurations, monitor exact site visit pings, inspect live active/concurrent browser tabs, and simulate viewport dimensions on responsive layouts.
+                </p>
+            </div>
+            
+            <!-- Pulse state indicator -->
+            <div class="flex items-center gap-3 bg-[#111113] border border-netflixBorder px-4 py-3 rounded-xl min-w-[200px]">
+                <div class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </div>
+                <div class="text-left font-mono">
+                    <p class="text-[9px] uppercase font-bold text-neutral-500 leading-none">Database Status</p>
+                    <p class="text-xs font-black text-white mt-1">CineHub Server live</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real-Time Stats Grid Counters -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            
+            <!-- Site Visits Stats Card -->
+            <div class="bg-netflixCard border border-netflixBorder p-5 rounded-2xl space-y-3.5 flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] uppercase font-mono font-bold tracking-widest text-[#8a8a93]">Total Site Views</span>
+                    <i class="fas fa-eye text-netflixRed text-base bg-netflixRed/10 p-2.5 rounded-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl md:text-3xl font-display font-black tracking-tight text-white font-mono" id="visitCountLabel">0</h3>
+                    <p class="text-[10px] text-neutral-500 mt-1 flex items-center gap-1 font-semibold">
+                        <i class="fas fa-arrow-up text-emerald-500 text-[8px]"></i> Real-time cumulative hit count
+                    </p>
+                </div>
+            </div>
+
+            <!-- Active Users Stats Card -->
+            <div class="bg-netflixCard border border-netflixBorder p-5 rounded-2xl space-y-3.5 flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] uppercase font-mono font-bold tracking-widest text-[#8a8a93]">Live Online Users</span>
+                    <i class="fas fa-users text-blue-400 text-base bg-blue-500/10 p-2.5 rounded-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl md:text-3xl font-display font-black tracking-tight text-white font-mono flex items-center gap-2">
+                        <span id="onlineCountLabel">0</span> 
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                        </span>
+                    </h3>
+                    <p class="text-[10px] text-neutral-500 mt-1 flex items-center gap-1 font-semibold">
+                        <i class="fas fa-bolt text-amber-500 text-[8px]"></i> Calculates tabs active in last 30s
+                    </p>
+                </div>
+            </div>
+
+            <!-- System Latency Calculator Card -->
+            <div class="bg-netflixCard border border-netflixBorder p-5 rounded-2xl space-y-3.5 flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] uppercase font-mono font-bold tracking-widest text-[#8a8a93]">Response Latency</span>
+                    <i class="fas fa-tachometer-alt text-teal-400 text-base bg-teal-500/10 p-2.5 rounded-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl md:text-3xl font-display font-black tracking-tight text-white font-mono" id="latencyLabel">...</h3>
+                    <p class="text-[10px] text-neutral-500 mt-1 flex items-center gap-1 font-semibold">
+                        <i class="fas fa-microchip text-indigo-400 text-[8px]"></i> Admin API round-trip ping latency
+                    </p>
+                </div>
+            </div>
+
+            <!-- Configured AI Brains count -->
+            <div class="bg-netflixCard border border-netflixBorder p-5 rounded-2xl space-y-3.5 flex flex-col justify-between">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] uppercase font-mono font-bold tracking-widest text-[#8a8a93]">Active AI Models</span>
+                    <i class="fas fa-brain text-purple-400 text-base bg-purple-500/10 p-2.5 rounded-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl md:text-3xl font-display font-black tracking-tight text-white font-mono">3 Classes</h3>
+                    <p class="text-[10px] text-neutral-500 mt-1 flex items-center gap-1 font-semibold">
+                        <i class="fas fa-robot text-purple-400 text-[8px]"></i> BOT-1, BOT-2, & BOT-3 system
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Workspace: Settings Layout and Responsive simulation calculator -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Left Side: Site Settings Options (8 Cols) -->
+            <section class="lg:col-span-7 space-y-6">
+                <div class="bg-netflixCard border border-netflixBorder rounded-2xl p-6 space-y-6">
+                    <div class="flex items-center justify-between border-b border-netflixBorder pb-4">
+                        <h2 class="text-lg font-display font-black text-white flex items-center gap-2">
+                            <i class="fas fa-sliders-h text-netflixRed"></i> Website Settings Management
+                        </h2>
+                        <span class="px-2.5 py-0.5 rounded-full bg-netflixRed/15 text-netflixRed border border-netflixRed/20 text-[9px] font-mono tracking-widest uppercase font-extrabold">EDIT MODE</span>
+                    </div>
+
+                    <form id="settingsForm" onsubmit="saveSiteSettings(event)" class="space-y-5">
+                        <!-- Site Title Field -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-extrabold uppercase tracking-wide text-neutral-400 font-mono">CineHub Site Title</label>
+                            <input type="text" id="siteTitleInput" class="w-full bg-[#0a0a0b] border border-netflixBorder rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-netflixRed placeholder-neutral-600 font-sans transition-colors" placeholder="Premium CineHub Title content...">
+                            <p class="text-[10px] text-neutral-500 leading-normal">Optimizes SEO indexing in Search engines.</p>
+                        </div>
+
+                        <!-- Site Description SEO Metadata -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-extrabold uppercase tracking-wide text-neutral-400 font-mono">CineHub SEO Meta Description</label>
+                            <textarea id="siteDescInput" rows="3" class="w-full bg-[#0a0a0b] border border-netflixBorder rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-netflixRed placeholder-neutral-600 font-sans transition-colors resize-none" placeholder="Enter keyword rich website summaries..."></textarea>
+                        </div>
+
+                        <!-- AI Chat System Instructions Default BOT brain -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-extrabold uppercase tracking-wide text-neutral-400 font-mono">Default BOT Model Activation</label>
+                            <select id="defaultAiBotSelect" class="w-full bg-[#0a0a0b] border border-netflixBorder rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-netflixRed text-neutral-200 transition-colors">
+                                <option value="gemini-2.0-flash">BOT-1: Direct Gemini 2.0 (Direct High Quota)</option>
+                                <option value="openai/gpt-oss-120b:free:primary">BOT-2: GPT OSS 120B (Primary Router)</option>
+                                <option value="openai/gpt-oss-120b:free:backup">BOT-3: GPT OSS 120B (Backup Router)</option>
+                            </select>
+                            <p class="text-[10px] text-neutral-500 leading-normal">Sets which AI system is prioritized on first launch for cinema recommendations.</p>
+                        </div>
+
+                        <!-- Banner announcement message settings -->
+                        <div class="space-y-2">
+                            <label class="block text-xs font-extrabold uppercase tracking-wide text-neutral-400 font-mono">Announcement / Info Warning Banner (සිංහල / English)</label>
+                            <input type="text" id="siteBannerInput" class="w-full bg-[#0a0a0b] border border-netflixBorder rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-netflixRed placeholder-neutral-600 font-sans transition-colors" placeholder="Information warning scrolling text...">
+                            <p class="text-[10px] text-neutral-500 leading-normal">Updates the dynamic info alert strip inside cinema media pages in real-time.</p>
+                        </div>
+
+                        <!-- Checkbox Flags modes -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                            <label class="flex items-center gap-3 p-3 bg-[#0a0a0b]/60 border border-netflixBorder rounded-xl cursor-pointer select-none">
+                                <input type="checkbox" id="logoInvertCheckbox" class="rounded bg-[#0a0a0b] border-netflixBorder text-netflixRed focus:ring-netflixRed h-4 w-4">
+                                <div class="text-left">
+                                    <span class="text-xs font-bold text-neutral-200 block">Logo Silhouette Glow</span>
+                                    <span class="text-[9px] text-neutral-500 block leading-tight">Enables premium high-contrast red neon drop shadows</span>
+                                </div>
+                            </label>
+
+                            <label class="flex items-center gap-3 p-3 bg-[#0a0a0b]/60 border border-netflixBorder rounded-xl cursor-pointer select-none">
+                                <input type="checkbox" id="maintenanceCheckbox" class="rounded bg-[#0a0a0b] border-netflixBorder text-netflixRed focus:ring-netflixRed h-4 w-4">
+                                <div class="text-left">
+                                    <span class="text-xs font-bold text-neutral-200 block">Server-Side Strict Mode</span>
+                                    <span class="text-[9px] text-neutral-500 block leading-tight">Intercepts exceptions and enforces official API fallbacks</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Action Submit Panel -->
+                        <div class="pt-4 border-t border-netflixBorder flex items-center justify-between gap-4">
+                            <button type="button" onclick="resetSettingsForm()" class="px-5 py-2.5 rounded-xl border border-netflixBorder hover:bg-neutral-800 text-xs font-bold transition-all">
+                                Reset Changes
+                            </button>
+                            <button type="submit" class="px-6 py-2.5 rounded-xl bg-netflixRed hover:bg-netflixRedHover text-white text-xs font-bold transition-all shadow-lg shadow-netflixRed/20 flex items-center gap-2">
+                                <i class="fas fa-save"></i> Save System Config
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Right Side: Responsive preponcw calc mobile audit & aspect calculator (5 cols) -->
+            <section class="lg:col-span-5 space-y-6">
+                <div class="bg-netflixCard border border-netflixBorder rounded-2xl p-6 space-y-6">
+                    <div class="border-b border-netflixBorder pb-4">
+                        <h2 class="text-lg font-display font-black text-white flex items-center gap-2">
+                            <i class="fas fa-mobile-alt text-blue-400"></i> Responsive Screen Auditor
+                        </h2>
+                        <p class="text-[11px] text-neutral-400 mt-1">
+                            Use this interactive metric tool to audit multi-screen layout responsive breakpoints and calculate viewport scales ("preponcw calc").
+                        </p>
+                    </div>
+
+                    <div class="space-y-5">
+                        
+                        <!-- Screen Dimensions Inputs Grid -->
+                        <div class="grid grid-cols-2 gap-3.5">
+                            <div class="space-y-1.5 text-left">
+                                <label class="text-[10px] uppercase font-mono tracking-wider font-extrabold text-neutral-400">Width (pixels)</label>
+                                <div class="flex items-center bg-[#0a0a0b] border border-netflixBorder rounded-xl px-3 py-2.5">
+                                    <input type="number" id="viewportWidthInput" class="bg-transparent text-white font-mono text-xs w-full focus:outline-none" value="375" oninput="calculateResponsiveAspect()">
+                                    <span class="text-[10px] text-neutral-500 font-mono">px</span>
+                                </div>
+                            </div>
+                            <div class="space-y-1.5 text-left">
+                                <label class="text-[10px] uppercase font-mono tracking-wider font-extrabold text-neutral-400">Height (pixels)</label>
+                                <div class="flex items-center bg-[#0a0a0b] border border-netflixBorder rounded-xl px-3 py-2.5">
+                                    <input type="number" id="viewportHeightInput" class="bg-transparent text-white font-mono text-xs w-full focus:outline-none" value="812" oninput="calculateResponsiveAspect()">
+                                    <span class="text-[10px] text-neutral-500 font-mono">px</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fast presets selector -->
+                        <div class="space-y-2">
+                            <span class="block text-[9px] uppercase font-mono font-black text-neutral-500 tracking-wider">Mobile & Device Presets</span>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="setViewportPreset(360, 800, 'Mobile Small')" class="px-2.5 py-1.5 bg-[#0a0a0b] hover:bg-netflixRed hover:text-white border border-netflixBorder rounded-lg text-[10px] font-mono whitespace-nowrap transition-all">360×800 (Compact Phone)</button>
+                                <button onclick="setViewportPreset(390, 844, 'iPhone 14/15')" class="px-2.5 py-1.5 bg-[#0a0a0b] hover:bg-netflixRed hover:text-white border border-netflixBorder rounded-lg text-[10px] font-mono whitespace-nowrap transition-all">390×844 (iPhone 14/15)</button>
+                                <button onclick="setViewportPreset(412, 915, 'Pixel 7 Pro')" class="px-2.5 py-1.5 bg-[#0a0a0b] hover:bg-netflixRed hover:text-white border border-netflixBorder rounded-lg text-[10px] font-mono whitespace-nowrap transition-all">412×915 (Pixel 7 Pro)</button>
+                                <button onclick="setViewportPreset(768, 1024, 'iPad/Tablet')" class="px-2.5 py-1.5 bg-[#0a0a0b] hover:bg-netflixRed hover:text-white border border-netflixBorder rounded-lg text-[10px] font-mono whitespace-nowrap transition-all">768×1024 (iPad/Tablet)</button>
+                                <button onclick="setViewportPreset(1280, 720, 'Desktop Small')" class="px-2.5 py-1.5 bg-[#0a0a0b] hover:bg-netflixRed hover:text-white border border-netflixBorder rounded-lg text-[10px] font-mono whitespace-nowrap transition-all">1280×720 (Laptop/Desktop)</button>
+                            </div>
+                        </div>
+
+                        <!-- Real-time viewport calculated statistics -->
+                        <div class="p-4 rounded-xl bg-[#0a0a0b]/60 border border-netflixBorder space-y-3 font-mono text-[11px] text-left">
+                            <div class="flex justify-between border-b border-netflixBorder/60 pb-1.5">
+                                <span class="text-neutral-500 uppercase">Device Aspect Ratio:</span>
+                                <span class="text-neutral-200 font-bold" id="aspectRatioLabel">9:19.5</span>
+                            </div>
+                            <div class="flex justify-between border-b border-netflixBorder/60 pb-1.5">
+                                <span class="text-neutral-500 uppercase">CSS Breakpoint Zone:</span>
+                                <span class="px-2 py-0.2 rounded text-[9.5px] font-bold" id="breakpointBadge">Compact Mobile</span>
+                            </div>
+                            <div class="flex justify-between border-b border-netflixBorder/60 pb-1.5">
+                                <span class="text-neutral-500 uppercase">Grid Column Count:</span>
+                                <span class="text-neutral-200" id="columnsRecommendationLabel">2 Grid Columns recommended</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-neutral-500 uppercase">Viewport Density (Calc):</span>
+                                <span class="text-neutral-200 font-bold" id="viewportDppiLabel">304.5 K²px</span>
+                            </div>
+                        </div>
+
+                        <!-- audit Checklist benchmarks layout response checker -->
+                        <div class="bg-[#241a1a]/20 border border-yellow-900/30 p-4 rounded-xl text-left space-y-2.5">
+                            <h4 class="text-xs font-bold text-amber-500 flex items-center gap-1.5">
+                                <i class="fas fa-exclamation-triangle"></i> CineHub Breakpoint Checklists
+                            </h4>
+                            <ul class="text-[10px] space-y-1.5 text-neutral-400 font-bold" id="auditList">
+                                <li class="flex items-center gap-1.5 text-emerald-500"><i class="fas fa-check-circle"></i> Viewport meta scale correctly configured</li>
+                                <li class="flex items-center gap-1.5 text-emerald-500"><i class="fas fa-check-circle"></i> Image elements support direct bounds</li>
+                                <li class="flex items-center gap-1.5"><i class="fas fa-info-circle text-blue-400"></i> CSS media queries are active</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Visual Feedback Notification Toast -->
+    <div id="toastNotification" class="fixed bottom-6 right-6 px-5 py-3.5 bg-neutral-900 border border-netflixBorder rounded-xl shadow-2xl flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+        <i class="fas fa-info-circle text-netflixRed text-base" id="toastIcon"></i>
+        <div class="text-left font-sans">
+            <h5 class="text-xs font-black text-white" id="toastTitle">System saved</h5>
+            <p class="text-[10.5px] text-neutral-400 mt-0.5" id="toastMessage">Configurations was synced to server.ts database.</p>
+        </div>
+    </div>
+
+    <!-- Front-End Admin Logic -->
+    <script>
+        const API_BASE = "/api/admin";
+        let localSettingsCache = {};
+
+        // Load statistics on startup
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStatsAndSettings();
+            calculateResponsiveAspect();
+            
+            // Periodically ping statistics updates
+            setInterval(() => {
+                silentStatusRefresh();
+            }, 8000);
+        });
+
+        // Set dimensions preset helper
+        function setViewportPreset(w, h, name) {
+            document.getElementById('viewportWidthInput').value = w;
+            document.getElementById('viewportHeightInput').value = h;
+            calculateResponsiveAspect();
+            showToast("Viewport Presets applied", `Loaded dimensions: ${w}×${h} px for ${name}`, "fa-mobile-alt");
+        }
+
+        // Calculate aspect ratios & audit responsive layouts
+        function calculateResponsiveAspect() {
+            const w = parseFloat(document.getElementById('viewportWidthInput').value) || 375;
+            const h = parseFloat(document.getElementById('viewportHeightInput').value) || 812;
+            
+            // DPPI density calculations
+            const density = ((w * h) / 1000).toFixed(1);
+            document.getElementById('viewportDppiLabel').textContent = `${density} K²px`;
+
+            // Aspect Ratio Calculation
+            function gcd(a, b) {
+                return (b == 0) ? a : gcd(b, a % b);
+            }
+            const divisor = gcd(w, h);
+            const aspectStr = `${(w/divisor).toFixed(1).replace(".0","")}:${(h/divisor).toFixed(1).replace(".0","")}`;
+            let ratioLabel = aspectStr;
+            if (w === 375 && h === 812) ratioLabel = "9:19.5 (iPhone standard)";
+            if (w === 390 && h === 844) ratioLabel = "9:19.5 (iPhone Pro standard)";
+            if (w === 412 && h === 915) ratioLabel = "9:20 (Pixel aspect standard)";
+            if (w === 768 && h === 1024) ratioLabel = "3:4 (Tablet iPad format)";
+            if (w === 1280 && h === 720) ratioLabel = "16:9 (HD Desktop standard)";
+            document.getElementById('aspectRatioLabel').textContent = ratioLabel;
+
+            // Breakpoint classification
+            const breakpointBadge = document.getElementById('breakpointBadge');
+            const colsLabel = document.getElementById('columnsRecommendationLabel');
+            const auditList = document.getElementById('auditList');
+
+            if (w < 640) {
+                breakpointBadge.textContent = "xs (Phone Compact)";
+                breakpointBadge.className = "px-2.5 py-0.5 rounded text-[9.5px] font-bold bg-[#ff4757]/15 text-[#ff4757] border border-[#ff4757]/20";
+                colsLabel.textContent = "2 columns for movies grid optimal";
+                
+                auditList.innerHTML = `
+                    <li class="flex items-center gap-1.5 text-emerald-500"><i class="fas fa-check-circle"></i> Viewport scale supports touch grids</li>
+                    <li class="flex items-center gap-1.5 text-amber-400"><i class="fas fa-exclamation-circle"></i> Hide desktop language labels to preserve row layout</li>
+                    <li class="flex items-center gap-1.5 text-emerald-500"><i class="fas fa-check-circle"></i> Hamburger drawer trigger enabled</li>
+                `;
+            } else if (w >= 640 && w < 768) {
+                breakpointBadge.textContent = "sm (Phablet / Compact Tab)";
+                breakpointBadge.className = "px-2.5 py-0.5 rounded text-[9.5px] font-bold bg-amber-500/15 text-amber-400 border border-amber-500/20";
+                colsLabel.textContent = "3 columns for movies grid optimal";
+                
+                auditList.innerHTML = `
+                    <li class="flex items-center gap-1.5 text-emerald-500"><i class="fas fa-check-circle"></i> Viewport scale safe</li>
+                    <li class="flex items-center gap-1.5 text-emerald-500"><i class="fas fa-check-circle"></i> Text sizes scale smoothly</li>
+                    <li class="flex items-center gap-1.5 text-amber-400"><i class="fas fa-exclamation-circle"></i> Recommended 3 grid items gap padding</li>
+                `;
+            } else if (w >= 768 && w < 1024) {
+                breakpointBadge.textContent = "md (Standard Tablet / iPad)";
+                breakpointBadge.className = "px-2.5 py-0.5 rounded text-[9.5px] font-bold bg-blue-500/15 text-blue-400 border border-blue-500/20";
+                colsLabel.textContent = "4 columns for movies grid optimal";
+                
+                auditList.innerHTML = `
+                    <li class="flex items-center gap-1.5 text-emerald-500"><i class="fas fa-check-circle"></i> Grid scales properly on MD devices</li>
+                    <li class="flex items-center gap-1.5 text-emerald-500"><i class="fas fa-check-circle"></i> Main search displays fully</li>
+                    <li class="flex items-center gap-1.5 text-emerald-500"><i class="fas fa-check-circle"></i> Video details responsive layout</li>
+                `;
+            } else if (w >= 1024 && w < 1280) {
+                breakpointBadge.textContent = "lg (Large Tablet / Notebook)";
+                breakpointBadge.className = "px-2.5 py-0.5 rounded text-[9.5px] font-bold bg-indigo-500/15 text-indigo-400 border border-indigo-500/20";
+                colsLabel.textContent = "5 columns for movies grid optimal";
+                
+                auditList.innerHTML = `
+                    <li class="flex items-center gap-1.5 text-emerald-500"><i class="fas fa-check-circle"></i> Large screen scale benchmark passing</li>
+                    <li class="flex items-center gap-1.5 text-emerald-500"><i class="fas fa-check-circle"></i> Side panels and drawers are clean</li>
+                `;
+            } else {
+                breakpointBadge.textContent = "xl & widescreen (Desktop Mon)";
+                breakpointBadge.className = "px-2.5 py-0.5 rounded text-[9.5px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/20";
+                colsLabel.textContent = "6 columns for movies grid optimal";
+                
+                auditList.innerHTML = `
+                    <li class="flex items-center gap-1.5 text-emerald-500"><i class="fas fa-check-circle"></i> Full monitor desktop scaling enabled</li>
+                    <li class="flex items-center gap-1.5 text-emerald-500"><i class="fas fa-check-circle"></i> Persistent full header links active</li>
+                `;
+            }
+        }
+
+        // Core AJAX loaders
+        async function loadStatsAndSettings() {
+            const start = performance.now();
+            const icon = document.getElementById('refreshBtnIcon');
+            if (icon) icon.classList.add('animate-spin');
+
+            try {
+                // Fetch stats and config parameters
+                const stRes = await fetch(`${API_BASE}/stats`);
+                const configRes = await fetch(`${API_BASE}/settings`);
+
+                if (stRes.ok && configRes.ok) {
+                    const stats = await stRes.json();
+                    const settings = await configRes.json();
+                    
+                    localSettingsCache = settings;
+
+                    // Update Counters UI
+                    document.getElementById('visitCountLabel').textContent = Number(stats.visits || 0).toLocaleString();
+                    document.getElementById('onlineCountLabel').textContent = stats.activeSessions || 1;
+                    
+                    // Bind fields
+                    document.getElementById('siteTitleInput').value = settings.siteTitle || "";
+                    document.getElementById('siteDescInput').value = settings.siteDescription || "";
+                    document.getElementById('siteBannerInput').value = settings.bannerText || "";
+                    document.getElementById('defaultAiBotSelect').value = settings.activeBot || "gemini-2.0-flash";
+                    document.getElementById('logoInvertCheckbox').checked = settings.logoGlow ?? true;
+                    document.getElementById('maintenanceCheckbox').checked = settings.strictMode ?? false;
+
+                    // Latency
+                    const latency = (performance.now() - start).toFixed(0);
+                    document.getElementById('latencyLabel').textContent = `${latency} ms`;
+
+                    showToast("System Sync Successful", "Fetched real-time configuration database matrices.", "fa-check-circle");
+                }
+            } catch (err) {
+                console.error("Dashboard failed systems synchronization:", err);
+                showToast("System offline error", "Please verify server.ts dev process port binders.", "fa-exclamation-circle");
+            } finally {
+                setTimeout(() => {
+                    if (icon) icon.classList.remove('animate-spin');
+                }, 800);
+            }
+        }
+
+        async function silentStatusRefresh() {
+            try {
+                const stRes = await fetch(`${API_BASE}/stats`);
+                if (stRes.ok) {
+                    const stats = await stRes.json();
+                    document.getElementById('visitCountLabel').textContent = Number(stats.visits || 0).toLocaleString();
+                    document.getElementById('onlineCountLabel').textContent = stats.activeSessions || 1;
+                }
+            } catch (e) {
+                console.warn("Silent statistics sync was skipped.", e);
+            }
+        }
+
+        // Save Settings Update Handler
+        async function saveSiteSettings(event) {
+            event.preventDefault();
+
+            const payload = {
+                siteTitle: document.getElementById('siteTitleInput').value.trim(),
+                siteDescription: document.getElementById('siteDescInput').value.trim(),
+                bannerText: document.getElementById('siteBannerInput').value.trim(),
+                activeBot: document.getElementById('defaultAiBotSelect').value,
+                logoGlow: document.getElementById('logoInvertCheckbox').checked,
+                strictMode: document.getElementById('maintenanceCheckbox').checked
+            };
+
+            try {
+                const res = await fetch(`${API_BASE}/settings`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    showToast("Config Saved & Compiled", "Changes flushed to local settings database storage.", "fa-save text-emerald-400");
+                    localSettingsCache = payload;
+                } else {
+                    showToast("Error updating settings", "Response returned an invalid server state.", "fa-times-circle");
+                }
+            } catch (err) {
+                console.error("AJAX error writing settings file:", err);
+                showToast("Connection handshake failed", "Verify API server.ts routes are enabled.", "fa-exclamation-triangle");
+            }
+        }
+
+        // Reset changes cache fallback
+        function resetSettingsForm() {
+            if (Object.keys(localSettingsCache).length > 0) {
+                document.getElementById('siteTitleInput').value = localSettingsCache.siteTitle || "";
+                document.getElementById('siteDescInput').value = localSettingsCache.siteDescription || "";
+                document.getElementById('siteBannerInput').value = localSettingsCache.bannerText || "";
+                document.getElementById('defaultAiBotSelect').value = localSettingsCache.activeBot || "gemini-2.0-flash";
+                document.getElementById('logoInvertCheckbox').checked = localSettingsCache.logoGlow ?? true;
+                document.getElementById('maintenanceCheckbox').checked = localSettingsCache.strictMode ?? false;
+                showToast("Restructured", "Fields reset to current loaded values.", "fa-undo");
+            }
+        }
+
+        // Fancy Notification Overlay toast
+        let toastTimeout = null;
+        function showToast(title, text, iconClass = "fa-info-circle") {
+            const toast = document.getElementById('toastNotification');
+            const icon = document.getElementById('toastIcon');
+            const tTitle = document.getElementById('toastTitle');
+            const tMsg = document.getElementById('toastMessage');
+
+            if (toastTimeout) clearTimeout(toastTimeout);
+
+            icon.className = `fas ${iconClass} text-netflixRed text-base`;
+            tTitle.textContent = title;
+            tMsg.textContent = text;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
