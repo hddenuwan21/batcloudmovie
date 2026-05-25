@@ -5,8 +5,8 @@ import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 
 const app = express();
-// 🚀 Render එකෙන් දෙන PORT එක ගන්නවා, නැත්නම් 3000 ගන්නවා
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+// 🚀 Render එකට ගැලපෙන ලෙස නිවැරදිව PORT එක සකස් කිරීම
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
@@ -19,7 +19,7 @@ function loadSiteData() {
     settings: {
       siteTitle: "CineHub - Premium Media | Watch Free Movies & TV Series Online",
       siteDescription: "Stream the latest movies, trending TV series, and exclusive cinematic content on CineHub. Premium free media platform with high quality, smooth streaming, and Sinhala subtitles.",
-      bannerText: "CineHub High Speed Server පෝට්ෆෝලියෝ සේවාදායකයන් ස්වයංක්‍රීයව ක්‍රියා කරයි. අනෙක් සියලුම සේවා තත්කාලීන පූරණයට සූදානම් කර ඇත. Playback Errors ඇත්නම් Server tabs මාරු කරන්න.",
+      bannerText: "CineHub High Speed Server පෝට්ෆෝලියෝ සේවාදායකයන් ස්වයංක්‍රීයව ක්‍රියා කරයි. අනෙක් සියලුම සේවා තත්කාලීන පූරණයට සූදානම් කර ඇත. Playback Errors ඇත්නම් Server tabs මාරু කරන්න.",
       activeBot: "gemini-2.0-flash",
       logoGlow: true,
       strictMode: false
@@ -118,8 +118,8 @@ app.post("/api/admin/heartbeat", (req, res) => {
   res.json({ success: true, activeSessions: Math.max(1, activeSessions.size) });
 });
 
-// 🤖 චැට් බොට් එක වැඩ කරන ප්‍රධාන API එක
-app.post("/api/ai/chat", async (req, res) => {
+// 🤖 💡 නිවැරදි කිරීම: Frontend එකට ගැලපෙන්න route එක "/api/chat" ලෙස වෙනස් කළා
+app.post("/api/chat", async (req, res) => {
   const { message, prompt, responseSchema } = req.body;
   const promptText = message || prompt;
 
@@ -143,7 +143,7 @@ app.post("/api/ai/chat", async (req, res) => {
     }
     
     const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash", // වැරදි මොඩල් එක නිවැරදි කළා (gemini-3.5 කියා එකක් නැත)
+      model: "gemini-2.0-flash",
       contents: promptText,
       config: config
     });
@@ -217,7 +217,7 @@ async function startServer() {
     // Static assets සර්ව් කිරීම
     app.use(express.static(distPath));
     
-    // 🚨 සිදුවී තිබූ ප්‍රධාන වැරැද්ද: dist එකේ index.html නැතිනම් root එකේ index.html එක පෙන්වීම
+    // dist එකේ index.html නැතිනම් root එකේ index.html එක පෙන්වීම
     app.get("*", (req, res) => {
       const distIndex = path.join(distPath, "index.html");
       if (fs.existsSync(distIndex)) {
@@ -228,8 +228,9 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on port ${PORT}`);
+  // 💡 Render එකට වඩාත්ම ආරක්ෂිත listen ක්‍රමය
+  app.listen(PORT, () => {
+    console.log(`Server running safely on port ${PORT}`);
   });
 }
 
