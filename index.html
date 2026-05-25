@@ -768,7 +768,7 @@
             console.log(`AI Chat Connection: Protocol=${window.location.protocol}, Calling=${serverURL}`);
 
             // Helper for fetch with timeout
-            async function fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
+            async function fetchWithTimeout(url, options = {}, timeoutMs = 45000) {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
                 try {
@@ -797,7 +797,7 @@
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify(payload)
-                }, 15000);
+                }, 45000);
 
                 if (res.ok) {
                     const data = await res.json();
@@ -831,7 +831,7 @@
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(payload)
-                        }, 10000);
+                        }, 30000);
 
                         if (backupRes.ok) {
                             const data = await backupRes.json();
@@ -4321,6 +4321,14 @@ Only output the valid JSON response schema requested without any prefaces or mar
             feed.appendChild(typingBox);
             feed.scrollTop = feed.scrollHeight;
 
+            // Render spin-up alert guide warning if Render is sleeping
+            const spinNoticeId = setTimeout(() => {
+                const typingSpan = typingBox.querySelector('span');
+                if (typingSpan && document.getElementById('aiTypingIndicator')) {
+                    typingSpan.innerHTML = `${textAssets.aiThinking[currentLang]}<span class="block mt-1.5 text-[8.5px] text-yellow-500/95 leading-normal animate-pulse font-medium max-w-[280px]">⚠️ Render Server එක අවදි වෙමින් පවතියි. නොමිලේ ලබාදෙන සේවාදායකයේ (Free Server) පළමු පූරණය සඳහා තත්පර 30-40ක් පමණ ගත විය හැකියි.<br>Render backend is waking up from sleep. First prompt may take 30-40s on free instance tiers.</span>`;
+                }
+            }, 6500);
+
             // Chat engine mapping system prompt
             const systemPrompt = `You are CineHub's smart AI Movie and TV assistant. 
 You must speak in Sinhalese (සිංහල), English, or Singlish (Romanized Sinhalese) depending on what the user uses to converse with you.
@@ -4347,6 +4355,7 @@ CRITICAL FORMATTING INSTRUCTIONS for listing movies or suggestions:
             } catch (err) {
                 console.error("AI error response block:", err);
             } finally {
+                clearTimeout(spinNoticeId);
                 // Instantly remove Typing indicator
                 const typingInd = document.getElementById('aiTypingIndicator');
                 if (typingInd) typingInd.remove();
