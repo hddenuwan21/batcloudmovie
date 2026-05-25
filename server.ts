@@ -142,27 +142,52 @@ app.post("/api/chat", async (req, res) => {
     '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',
     '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'
   ];
-  const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AIzaSyBN1xR-TmPghY8Y4e0-AIEj_424D8HLIgg';
+  
+  // 🧹 Trimming API key to prevent copy-paste whitespace errors
+  const GEMINI_API_KEY = (process.env.GEMINI_API_KEY || 'AIzaSyBN1xR-TmPghY8Y4e0-AIEj_424D8HLIgg').trim();
 
-  // 1. Official SDK
-  try {
-    console.log("Server: Attempting official Gemini API...");
-    const config: any = {};
-    if (responseSchema) {
-      config.responseMimeType = "application/json";
-      config.responseSchema = responseSchema;
+  // Lazy initialize GoogleGenAI with fresh, trimmed API Key on each request
+  const aiClient = new GoogleGenAI({
+    apiKey: GEMINI_API_KEY,
+    httpOptions: {
+      headers: {
+        "User-Agent": "aistudio-build",
+      },
+    },
+  });
+
+  // Models to process in sequence
+  const modelsToTry = [
+    "gemini-flash-latest",
+    "gemini-2.5-flash",
+    "gemini-2.0-flash",
+    "gemini-3.5-flash"
+  ];
+
+  // 1. Official SDK with Cascade Model Fallbacks
+  for (const modelName of modelsToTry) {
+    try {
+      console.log(`Server: Attempting official Gemini SDK with model: ${modelName}...`);
+      const config: any = {};
+      if (responseSchema) {
+        config.responseMimeType = "application/json";
+        config.responseSchema = responseSchema;
+      }
+      
+      const response = await aiClient.models.generateContent({
+        model: modelName,
+        contents: promptText,
+        config: config
+      });
+
+      const reply = response.text;
+      if (reply) {
+        console.log(`Server: Successfully fetched response with model ${modelName}!`);
+        return res.json({ reply });
+      }
+    } catch (sdkErr: any) {
+      console.warn(`Server: Official SDK with model ${modelName} failed:`, sdkErr?.message || sdkErr);
     }
-    
-    const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
-      contents: promptText,
-      config: config
-    });
-
-    const reply = response.text;
-    if (reply) return res.json({ reply });
-  } catch (sdkErr) {
-    console.warn("Server: Gemini SDK failed. Trying OpenRouter...", sdkErr);
   }
 
   // 2. OpenRouter Cascade
@@ -198,30 +223,36 @@ app.post("/api/chat", async (req, res) => {
   }
 
   // 3. Direct Fetch Fallback
-  try {
-    const directBody: any = {
-      contents: [{ parts: [{ text: promptText }] }]
-    };
-    if (responseSchema) {
-      directBody.generationConfig = {
-        responseMimeType: "application/json",
-        responseSchema: responseSchema
+  for (const fallbackModel of ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-3.5-flash"]) {
+    try {
+      const directBody: any = {
+        contents: [{ parts: [{ text: promptText }] }]
       };
-    }
+      if (responseSchema) {
+        directBody.generationConfig = {
+          responseMimeType: "application/json",
+          responseSchema: responseSchema
+        };
+      }
 
-    const directRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(directBody)
-    });
+      console.log(`Server: Attempting direct HTTP fallback with model ${fallbackModel}...`);
+      const directRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${fallbackModel}:generateContent?key=${GEMINI_API_KEY}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(directBody)
+      });
 
-    if (directRes.ok) {
-      const resData = await directRes.json();
-      const reply = resData?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (reply) return res.json({ reply });
+      if (directRes.ok) {
+        const resData = await directRes.json();
+        const reply = resData?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (reply) return res.json({ reply });
+      } else {
+        const errJson = await directRes.json().catch(() => ({}));
+        console.warn(`Direct fetch for ${fallbackModel} responded with error status:`, directRes.status, errJson);
+      }
+    } catch (err) {
+      console.error(`Direct fallback for ${fallbackModel} failed:`, err);
     }
-  } catch (err) {
-    console.error("Direct fallback failed:", err);
   }
 
   // 4. Ultimate Resilient Human Fallback - guide user how to add keys to Render.com and explain why
