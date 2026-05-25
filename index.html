@@ -10,7 +10,7 @@
     <meta name="description" content="Stream the latest movies, trending TV series, and exclusive cinematic content on CineHub. Premium free media platform with high quality, smooth streaming, and Sinhala subtitles.">
     <meta name="keywords" content="CineHub, CineHub live, Watch free movies, Free TV Series online, Stream movies free, Sinhala sub movies, Cinema LK free, Watch series online, ෆ්‍රී ෆිල්ම්ස්, සිංහල සබ්, සිනමා ලංකා, ලංකා ෆ්ලික්ස්">
     <meta name="author" content="CineHub Media">
-    <link rel="canonical" href="https://cinehub.live/"> <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <link rel="canonical" href="https://cinehub-3zqz.onrender.com/"> <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     <meta name="googlebot" content="index, follow">
     <meta name="googlebot-video" content="index, follow">
     <meta name="googlebot-image" content="index, follow">
@@ -20,10 +20,10 @@
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "CineHub",
-      "url": "https://cinehub.live/",
+      "url": "https://cinehub-3zqz.onrender.com/",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://cinehub.live/?search={search_term_string}",
+        "target": "https://cinehub-3zqz.onrender.com/?search={search_term_string}",
         "query-input": "required name=search_term_string"
       },
       "description": "Watch high-quality movies and series for free on CineHub Premium Media."
@@ -34,7 +34,7 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="CineHub - Premium Media | Watch Free Movies & TV Series Online">
     <meta property="og:description" content="Stream the latest movies and trending TV series in high quality for free on CineHub. Enjoy a lag-free premium cinema experience.">
-    <meta property="og:url" content="https://cinehub.live/">
+    <meta property="og:url" content="https://cinehub-3zqz.onrender.com/">
     <meta property="og:site_name" content="CineHub">
     <meta property="og:image" content="favicon.png">
     <meta property="og:image:width" content="1200">
@@ -702,21 +702,15 @@
         const IMAGE_BASE_W500 = 'https://image.tmdb.org/t/p/w500';
         const IMAGE_BASE_ORIGINAL = 'https://image.tmdb.org/t/p/original';
 
-        // Environment Configuration Setup
-        const GEMINI_DIRECT_KEY = (typeof process !== 'undefined' && process.env && process.env.GEMINI_API_KEY)
-            ? process.env.GEMINI_API_KEY
-            : "AIzaSyBN1xR-TmPghY8Y4e0-AIEj_424D8HLIgg";
-
-        const OPENROUTER_KEY_1 = (typeof process !== 'undefined' && process.env && process.env.OPENROUTER_KEY_1)
-            ? process.env.OPENROUTER_KEY_1
-            : "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";
-
-        const OPENROUTER_KEY_2 = (typeof process !== 'undefined' && process.env && process.env.OPENROUTER_KEY_2)
-            ? process.env.OPENROUTER_KEY_2
-            : "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";
-
-        const OPENROUTER_API_KEY = OPENROUTER_KEY_1;
-        const OP_KEY = OPENROUTER_API_KEY;
+        // Environment Configuration Setup - Keys are stored safely on the server side to prevent theft and CORS errors.
+        // Save current origin for local file access fallback
+        if (window.location.protocol !== 'file:') {
+            try {
+                localStorage.setItem('cinehub_server_origin', window.location.origin);
+            } catch (e) {
+                console.warn("Storage write failed:", e);
+            }
+        }
 
         let selectedAIModel = "gemini-2.0-flash";
 
@@ -746,8 +740,35 @@
         async function fetchAIChatResponse(promptText, useSchema = null) {
             const isLocalFile = window.location.protocol === 'file:';
 
+            // Determine active backend server origin
+            let activeOrigin = "";
+            let usingSavedOrigin = false;
+
+            if (isLocalFile) {
+                // If opening locally as a file:/// link, get the saved live origin from localStorage
+                try {
+                    const saved = localStorage.getItem('cinehub_server_origin');
+                    if (saved && saved.startsWith('http')) {
+                        activeOrigin = saved.replace(/\/$/, '');
+                        usingSavedOrigin = true;
+                    }
+                } catch (e) {
+                    console.warn("Failed to read saved origin:", e);
+                }
+
+                // Default fallback options if no origin is saved yet
+                if (!activeOrigin) {
+                    activeOrigin = "https://ais-dev-37i5nbj2zxluswrbebs5zo-178073893340.asia-east1.run.app";
+                }
+            } else {
+                activeOrigin = window.location.origin;
+            }
+
+            const serverURL = `${activeOrigin.replace(/\/$/, '')}/api/chat`;
+            console.log(`AI Chat Connection: Protocol=${window.location.protocol}, Calling=${serverURL}`);
+
             // Helper for fetch with timeout
-            async function fetchWithTimeout(url, options = {}, timeoutMs = 12000) {
+            async function fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
                 try {
@@ -761,128 +782,75 @@
                 }
             }
 
-            // High Intelligence Prioritised Call Cascade Tree
-            const attempts = [];
+            // 1. Secure primary server-side proxy call (Fully secure, no client key exposure)
+            try {
+                const payload = {
+                    message: promptText,
+                };
+                if (useSchema) {
+                    payload.responseSchema = useSchema;
+                }
 
-            if (selectedAIModel === "gemini-2.0-flash") {
-                attempts.push({ type: "gemini" });
-                attempts.push({ type: "openrouter", keyType: "primary" });
-                attempts.push({ type: "openrouter", keyType: "backup" });
-            } else if (selectedAIModel === "openai/gpt-oss-120b:free:primary") {
-                attempts.push({ type: "openrouter", keyType: "primary" });
-                attempts.push({ type: "gemini" });
-                attempts.push({ type: "openrouter", keyType: "backup" });
-            } else { // "openai/gpt-oss-120b:free:backup"
-                attempts.push({ type: "openrouter", keyType: "backup" });
-                attempts.push({ type: "gemini" });
-                attempts.push({ type: "openrouter", keyType: "primary" });
+                const res = await fetchWithTimeout(serverURL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                }, 15000);
+
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.reply) {
+                        console.log("Successfully fetched response from CineHub Secure Backend Proxy!");
+                        return data.reply;
+                    }
+                } else {
+                    const errText = await res.text().catch(() => "");
+                    console.warn(`Backend returned status ${res.status}: ${errText}`);
+                }
+            } catch (err) {
+                console.warn(`Secure backend connection to ${serverURL} failed/timed out:`, err);
             }
 
-            // Execute sequence
-            for (const attempt of attempts) {
-                if (attempt.type === "gemini") {
+            // 2. Extra resilience: If we are on file:// and the primary connection failed, try standard hosted backups
+            if (isLocalFile) {
+                const backups = [
+                    "https://ais-dev-37i5nbj2zxluswrbebs5zo-178073893340.asia-east1.run.app",
+                    "https://ais-pre-37i5nbj2zxluswrbebs5zo-178073893340.asia-east1.run.app",
+                    "https://cinehub-3zqz.onrender.com"
+                ];
+                for (const backupOrigin of backups) {
+                    if (backupOrigin === activeOrigin) continue; // already tried
                     try {
-                        console.log("Attempting Direct Google Gemini 2.0 Flash API (Direct Priority/Fallback)...");
-                        const geminiPayload = {
-                            contents: [
-                                {
-                                    parts: [
-                                        {
-                                            text: promptText
-                                        }
-                                    ]
-                                }
-                            ],
-                            systemInstruction: {
-                                parts: [
-                                    {
-                                        text: "You are a friendly cinema AI assistant on CineHub streaming platform. Reply concisely in friendly colloquial Sinhala or English depending on user message. Recommend movies to watch, ratings, and cast details."
-                                    }
-                                ]
-                            }
-                        };
+                        const backupURL = `${backupOrigin}/api/chat`;
+                        console.log(`Trying alternative backup server: ${backupURL}`);
+                        const payload = { message: promptText };
+                        if (useSchema) payload.responseSchema = useSchema;
 
-                        if (useSchema) {
-                            geminiPayload.generationConfig = {
-                                responseMimeType: "application/json",
-                                responseSchema: useSchema
-                            };
-                        }
-
-                        const geminiURL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + GEMINI_DIRECT_KEY;
-                        const geminiRes = await fetchWithTimeout(geminiURL, {
+                        const backupRes = await fetchWithTimeout(backupURL, {
                             method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify(geminiPayload)
-                        }, 12000);
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(payload)
+                        }, 10000);
 
-                        if (geminiRes.ok) {
-                            const geminiData = await geminiRes.json();
-                            const reply = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text;
-                            if (reply) {
-                                console.log("Successfully fetched response from Direct Gemini 2.0 Flash API!");
-                                return reply;
+                        if (backupRes.ok) {
+                            const data = await backupRes.json();
+                            if (data.reply) {
+                                console.log(`CORS/Proxy Bypass Success using alternative server: ${backupOrigin}`);
+                                try {
+                                    localStorage.setItem('cinehub_server_origin', backupOrigin);
+                                } catch (_) {}
+                                return data.reply;
                             }
-                        } else {
-                            const errText = await geminiRes.text().catch(() => "");
-                            console.warn(`Direct Gemini API returned HTTP status ${geminiRes.status}: ${errText}`);
                         }
-                    } catch (err) {
-                        console.warn("Direct Gemini API failed or timed out. Moving to next fallback...", err);
-                    }
-                } else if (attempt.type === "openrouter") {
-                    const activeKey = attempt.keyType === "primary" ? OPENROUTER_KEY_1 : OPENROUTER_KEY_2;
-                    try {
-                        console.log(`Attempting OpenRouter fetch with model: openai/gpt-oss-120b:free using Key ${attempt.keyType.toUpperCase()}...`);
-                        const orPayload = {
-                            model: "openai/gpt-oss-120b:free",
-                            messages: [
-                                { 
-                                    role: "system", 
-                                    content: "You are a friendly cinema AI assistant on CineHub streaming platform. Reply concisely in friendly colloquial Sinhala or English depending on user message. Recommend movies to watch, ratings, and cast details." 
-                                },
-                                { 
-                                    role: "user", 
-                                    content: promptText 
-                                }
-                            ]
-                        };
-
-                        if (useSchema) {
-                            orPayload.response_format = { type: "json_object" };
-                        }
-
-                        const orRes = await fetchWithTimeout("https://openrouter.ai/api/v1/chat/completions", {
-                            method: "POST",
-                            headers: {
-                                "Authorization": "Bearer " + activeKey,
-                                "Content-Type": "application/json",
-                                "HTTP-Referer": window.location.origin || "https://localhost",
-                                "X-Title": "CineHub Cinema"
-                            },
-                            body: JSON.stringify(orPayload)
-                        }, 12000);
-
-                        if (orRes.ok) {
-                            const orData = await orRes.json();
-                            const reply = orData?.choices?.[0]?.message?.content;
-                            if (reply) {
-                                console.log(`Successfully fetched response from OpenRouter using model openai/gpt-oss-120b:free (${attempt.keyType})`);
-                                return reply;
-                            }
-                        } else {
-                            const errText = await orRes.text().catch(() => "");
-                            console.warn(`OpenRouter API model openai/gpt-oss-120b:free returned HTTP status ${orRes.status}: ${errText}`);
-                        }
-                    } catch (err) {
-                        console.warn(`OpenRouter API model openai/gpt-oss-120b:free failed or timed out using Key ${attempt.keyType}:`, err);
+                    } catch (e) {
+                        console.warn(`Alternative backup ${backupOrigin} connection failed:`, e);
                     }
                 }
             }
 
-            // Fallback 4: Smart Offline Cinematic Bot Responders (so it NEVER crashes / fails, perfectly resilient!)
+            // Fallback 3: Smart Offline Cinematic Bot Responders (so it NEVER crashes / fails, perfectly resilient!)
             if (useSchema) {
                 // If it asks for schema-based response (like movie analyses)
                 return JSON.stringify({

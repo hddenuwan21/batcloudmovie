@@ -8,6 +8,17 @@ const app = express();
 // 🚀 Render එකට ගැලපෙන ලෙස නිවැරදිව PORT එක සකස් කිරීම
 const PORT = process.env.PORT || 3000;
 
+// 🔒 CORS සදහා ආරක්ෂිත ලියාපදිංචිය - file:// සහ ඕනෑම Origin එකක් සදහා ඉඩ සලසයි (CORS fix)
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+  next();
+});
+
 app.use(express.json());
 
 // Persistent database helpers
@@ -162,7 +173,7 @@ app.post("/api/chat", async (req, res) => {
         headers: {
           "Authorization": `Bearer ${key}`,
           "Content-Type": "application/json",
-          "HTTP-Referer": "https://cinehub.live",
+          "HTTP-Referer": "https://cinehub-3zqz.onrender.com",
           "X-Title": "CineHub Media"
         },
         body: JSON.stringify({
